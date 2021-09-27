@@ -11,7 +11,10 @@
 <h4 align="center">Why fly by plane if you can play this game?</h4>
 <br>  
 
-![screenshot](sample.png)
+<h2 align="center">
+<img src="sample.png" alt="Tappy Plane Photo">
+</h2>
+
 
 ## Credits
 

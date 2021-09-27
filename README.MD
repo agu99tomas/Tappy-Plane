@@ -12,7 +12,7 @@
 <br>  
 
 <p align="center">
-  <img src="sample.png" alt="Tappy Plane Photo">
+  <img src="preview.png" alt="Tappy Plane Photo">
 </p>
 
 

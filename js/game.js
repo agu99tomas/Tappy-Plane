@@ -79,7 +79,9 @@ class StageGetReady extends Stage {
         });
     }
 
-    loading(ctx, canvas, loadedImage, totalImages) { }
+    loading(ctx, canvas, loadedImage, totalImages) { 
+        console.log(loadedImage +" "+ totalImages);
+    }
 
     start(canvas, objects) {
 
@@ -104,10 +106,10 @@ class StageGetReady extends Stage {
 
         ctx.drawImage(objects.planeYellow.image, objects.planeYellow.x, objects.planeYellow.y);
         objects.planeYellow.animation(frame)
-        
+
         if (this.nextStage) {
-            if (this.alpha > 0)  this.alpha -= 0.04;
-            
+            if (this.alpha > 0) this.alpha -= 0.04;
+
             if (this.alpha < 0) {
                 this.alpha = 0;
                 this.canNextStage = true;
@@ -119,7 +121,7 @@ class StageGetReady extends Stage {
         ctx.drawImage(objects.tapRight.image, objects.tapRight.x, objects.tapRight.y);
         ctx.globalAlpha = 1.0;
 
-        if (this.canNextStage) game.setStage(new StagePlay());
+        if (this.canNextStage) game.setStage('stagePlay');
 
     }
 
@@ -132,13 +134,15 @@ class StagePlay extends Stage {
         this.background = new StageBackground();
         this.drop = -2;
 
-        Events.addEventListener(Events.clickOnCanvas, e => {
-            if (this.drop < 0) 
-                this.drop += 7;
-        });
     }
 
-    start(canvas, objects) {}
+    start(canvas, objects) {
+
+        Events.addEventListener(Events.clickOnCanvas, e => {
+            if (this.drop < 0)
+                this.drop += 6;
+        });
+    }
 
     draw(ctx, canvas, frame, objects) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -150,7 +154,7 @@ class StagePlay extends Stage {
         objects.planeYellow.animation(frame)
 
         objects.planeYellow.y -= this.drop;
-        this.drop -= 0.2;
+        this.drop -= 0.1;
 
         /*ctx.save();
         ctx.translate(objects.planeYellow.x, objects.planeYellow.y);
@@ -163,35 +167,50 @@ class StagePlay extends Stage {
 
 }
 
+class TappyPlaneGame extends Game {
+
+    loadAllStages() {
+        this.addStage('getReady', new StageGetReady());
+        this.addStage('stagePlay', new StagePlay());
+    }
+
+    loadAllGameObjects() {
+        // Background
+        let gameObjectBackground = new StaticGameObject('background', 'background.png');
+        this.addGameObject(gameObjectBackground);
+
+        // Ground
+        let gameObjectGround = new StaticGameObject('ground', 'groundGrass.png');
+        this.addGameObject(gameObjectGround);
+
+        // Rocks
+        let gameObjectRock = new StaticGameObject('rock', 'rockGrass.png');
+        this.addGameObject(gameObjectRock);
+
+        let gameObjectRockDown = new StaticGameObject('rockDown', 'rockGrassDown.png');
+        this.addGameObject(gameObjectRockDown);
+
+        // UI
+        let gameObjectTextGetReady = new StaticGameObject('textGetReady', 'textGetReady.png');
+        this.addGameObject(gameObjectTextGetReady);
+
+        let gameObjectTapRight = new StaticGameObject('tapRight', 'tapRight.png');
+        this.addGameObject(gameObjectTapRight);
+
+        // Game
+        let gameImagesPlaneYellow = ['planeYellow1.png', 'planeYellow2.png', 'planeYellow3.png'];
+        let gameObjectPlaneYellow = new AnimatedGameObject('planeYellow', gameImagesPlaneYellow, 2);
+        this.addGameObject(gameObjectPlaneYellow);
+    }
+
+    startGame(){
+        this.loadAllGameObjects();
+        this.loadAllStages();
+        this.setStage('getReady');
+    }
+}
 
 window.onload = () => {
-    let stageGetReady = new StageGetReady();
-    game = new Game(stageGetReady);
-
-    // Background
-    let gameObjectBackground = new StaticGameObject('background', 'background.png');
-    game.addGameObject(gameObjectBackground);
-
-    // Ground
-    let gameObjectGround = new StaticGameObject('ground', 'groundGrass.png');
-    game.addGameObject(gameObjectGround);
-
-    // Rocks
-    let gameObjectRock = new StaticGameObject('rock', 'rockGrass.png');
-    game.addGameObject(gameObjectRock);
-
-    let gameObjectRockDown = new StaticGameObject('rockDown', 'rockGrassDown.png');
-    game.addGameObject(gameObjectRockDown);
-
-    // UI
-    let gameObjectTextGetReady = new StaticGameObject('textGetReady', 'textGetReady.png');
-    game.addGameObject(gameObjectTextGetReady);
-
-    let gameObjectTapRight = new StaticGameObject('tapRight', 'tapRight.png');
-    game.addGameObject(gameObjectTapRight);
-
-    // Game
-    let gameImagesPlaneYellow = ['planeYellow1.png', 'planeYellow2.png', 'planeYellow3.png'];
-    let gameObjectPlaneYellow = new AnimatedGameObject('planeYellow', gameImagesPlaneYellow, 2);
-    game.addGameObject(gameObjectPlaneYellow);
+    game = new TappyPlaneGame();
+    game.startGame();
 };

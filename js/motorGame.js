@@ -105,6 +105,21 @@ class Stage {
     loading(ctx, canvas, loadedImage, totalImages) { } // called when the game loads
 }
 
+// Game Context
+class GameContext {
+
+    constructor(game) {
+        this.ctx = game.ctx;
+        this.canvas = game.canvas;
+        this.objects = game.objects;
+        this.frame = 0;
+    }
+
+    setStage(id) {
+        this.game.setStage(id);
+    }
+}
+
 // Game Class
 
 class Game {
@@ -114,9 +129,11 @@ class Game {
         this.canvas.width = 800;
         this.canvas.height = 480;
         this.ctx = canvas.getContext("2d");
-        this.stage = firstStage;
+        this.stage = new Stage();
         this.firstFrame = true;
         this.gameObjects = {};
+        this.stages = {};
+        this.gameContext = new GameContext(this);
 
         this.canvas.onclick = e => {
             Events.dispatchEvent(Events.clickOnCanvas);
@@ -124,8 +141,12 @@ class Game {
         Events.addEventListener(Events.loadedImage, e => this.loading());
     }
 
-    setStage(stage) {
-        this.stage = stage;
+    addStage(id, stage) {
+        this.stages[id] = stage;
+    }
+
+    setStage(id) {
+        this.stage = this.stages[id];
         this.firstFrame = true;
     }
 
@@ -135,7 +156,7 @@ class Game {
 
     loading() {
         if (Resources.loadedImages == Resources.totalImages)
-            this.start();
+            this.startLoop();
         else
             this.stage.loading(this.ctx, this.canvas, Resources.loadedImages, Resources.totalImages);
     }
@@ -149,11 +170,12 @@ class Game {
         }
     }
 
-    start() {
+    startLoop() {
         let frame = 1;
 
         setInterval(() => {
             if (frame == 60) frame = 1;
+            this.gameContext.frame = frame;
             this.drawStage(this.ctx, this.canvas, frame);
             frame++;
         }, 16.66666666666667);

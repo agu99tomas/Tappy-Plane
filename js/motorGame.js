@@ -98,26 +98,11 @@ class AnimatedGameObject extends GameObject {
 
 class Stage {
 
-    start(canvas, objects) { } // called in the first frame of stage
+    start(game) { } // called on change of stage
 
-    draw(ctx, canvas, frame, objects) { } // called frame by frame
+    draw(game) { } // called frame by frame
 
-    loading(ctx, canvas, loadedImage, totalImages) { } // called when the game loads
-}
-
-// Game Context
-class GameContext {
-
-    constructor(game) {
-        this.ctx = game.ctx;
-        this.canvas = game.canvas;
-        this.objects = game.objects;
-        this.frame = 0;
-    }
-
-    setStage(id) {
-        this.game.setStage(id);
-    }
+    loading(game) { } // called when the game loads
 }
 
 // Game Class
@@ -125,19 +110,22 @@ class GameContext {
 class Game {
 
     constructor(firstStage) {
+        // Canvas
         this.canvas = document.getElementById("canvas");
         this.canvas.width = 800;
         this.canvas.height = 480;
+        this.width = this.canvas.width;
+        this.height = this.canvas.height;
         this.ctx = canvas.getContext("2d");
+
+        // Stage
         this.stage = new Stage();
         this.firstFrame = true;
-        this.gameObjects = {};
         this.stages = {};
-        this.gameContext = new GameContext(this);
+        this.frame = 1;
 
-        this.canvas.onclick = e => {
-            Events.dispatchEvent(Events.clickOnCanvas);
-        }
+        // Events
+        this.canvas.onclick = e => { Events.dispatchEvent(Events.clickOnCanvas) };
         Events.addEventListener(Events.loadedImage, e => this.loading());
     }
 
@@ -148,37 +136,53 @@ class Game {
     setStage(id) {
         this.stage = this.stages[id];
         this.firstFrame = true;
+        this.stage.start(this);
     }
 
     addGameObject(gameObject) {
-        this.gameObjects[gameObject.id] = gameObject;
+        Object.defineProperty(this, gameObject.id, {
+            value: gameObject
+        });
     }
 
     loading() {
         if (Resources.loadedImages == Resources.totalImages)
             this.startLoop();
         else
-            this.stage.loading(this.ctx, this.canvas, Resources.loadedImages, Resources.totalImages);
-    }
-
-    drawStage(ctx, canvas, frame) {
-        if (this.firstFrame) {
-            this.stage.start(canvas, this.gameObjects);
-            this.firstFrame = false;
-        } else {
-            this.stage.draw(ctx, canvas, frame, this.gameObjects);
-        }
+            this.stage.loading(this);
     }
 
     startLoop() {
-        let frame = 1;
-
         setInterval(() => {
-            if (frame == 60) frame = 1;
-            this.gameContext.frame = frame;
-            this.drawStage(this.ctx, this.canvas, frame);
-            frame++;
+            if (this.frame == 60) this.frame = 1;
+            this.stage.draw(this);
+            this.frame++;
         }, 16.66666666666667);
+    }
 
+    clear() {
+        this.ctx.clearRect(0, 0, this.width, this.height);
+    }
+
+    drawObject(gameObject, x, y) {
+        if (gameObject instanceof AnimatedGameObject) gameObject.animation(this.frame);
+        if (x == undefined && y == undefined) {
+            this.ctx.drawImage(gameObject.image, gameObject.x, gameObject.y);
+        } else {
+            this.ctx.drawImage(gameObject.image, x || 0, y);
+        }
+    }
+
+    drawAndCenterY(gameObject, x) {
+        gameObject.y = (this.height / 2) - gameObject.image.height / 2;
+        gameObject.x = x;
+        this.drawObject(gameObject);
+    }
+
+    drawAndCenterX(gameObject, y) {
+        gameObject.x = (this.width / 2) - gameObject.image.width / 2;
+        gameObject.y = y;
+        this.drawObject(gameObject);
     }
 }
+

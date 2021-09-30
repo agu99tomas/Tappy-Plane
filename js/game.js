@@ -108,19 +108,34 @@ class StagePlay extends Stage {
 
     start(game) {
         this.drop = -2;
+        this.gameOver = false;
+        this.canNextStage = false;
 
         Events.addEventListener(Events.clickOnCanvas, e => {
-            if (this.drop < 0) this.drop += 6;
+            if (this.drop < 0 && !this.gameOver) this.drop += 6;
         });
+
     }
 
     draw(game) {
         game.clear();
         game.drawBackground();
         game.drawObject(game.planeYellow);
-        game.planeYellow.y -= this.drop;
-        this.drop -= 0.1;
 
+        if (this.gameOver) {
+            game.planeYellow.x-=4;
+           if(game.planeYellow.image.width + game.planeYellow.x < 0 )
+                this.canNextStage = true;
+        }else{
+            game.planeYellow.y -= this.drop;
+            this.drop -= 0.1;
+        }
+
+        if ( (game.planeYellow.y + game.planeYellow.image.height) >=  (game.height - game.ground.image.height ) + 40 ) {
+            this.gameOver = true;
+        }
+
+        if (this.canNextStage) game.setStage('gameOver');
         /*ctx.save();
         ctx.translate(objects.planeYellow.x, objects.planeYellow.y);
         ctx.rotate(-10);

@@ -173,15 +173,13 @@ class Game {
         }
     }
 
-    drawAndCenterY(gameObject, x) {
+    drawAndCenterY(gameObject) {
         gameObject.y = (this.height / 2) - gameObject.image.height / 2;
-        gameObject.x = x;
         this.drawObject(gameObject);
     }
 
-    drawAndCenterX(gameObject, y) {
+    drawAndCenterX(gameObject) {
         gameObject.x = (this.width / 2) - gameObject.image.width / 2;
-        gameObject.y = y;
         this.drawObject(gameObject);
     }
 }

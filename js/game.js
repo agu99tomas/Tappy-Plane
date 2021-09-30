@@ -4,7 +4,14 @@ class TappyPlaneGame extends Game {
 
     loadAllStages() {
         this.addStage('getReady', new StageGetReady());
-        this.addStage('stagePlay', new StagePlay());
+        this.addStage('play', new StagePlay());
+        this.addStage('gameOver', new StageGameOver());
+    }
+
+    startGame() {
+        this.loadAllGameObjects();
+        this.loadAllStages();
+        this.setStage('getReady');
     }
 
     loadAllGameObjects() {
@@ -27,6 +34,9 @@ class TappyPlaneGame extends Game {
         let gameObjectTextGetReady = new StaticGameObject('textGetReady', 'textGetReady.png');
         this.addGameObject(gameObjectTextGetReady);
 
+        let gameObjectTextGameOver = new StaticGameObject('textGameOver', 'textGameOver.png');
+        this.addGameObject(gameObjectTextGameOver);
+
         let gameObjectTapRight = new StaticGameObject('tapRight', 'tapRight.png');
         this.addGameObject(gameObjectTapRight);
 
@@ -36,14 +46,8 @@ class TappyPlaneGame extends Game {
         this.addGameObject(gameObjectPlaneYellow);
     }
 
-    startGame(){
-        this.loadAllGameObjects();
-        this.loadAllStages();
-        this.setStage('getReady');
-    }
+    drawAsBackground(gameObject, velocity) {
 
-    drawAsBackground(gameObject, velocity){
-        
         this.drawObject(gameObject, gameObject.x, this.height - gameObject.image.height);
 
         this.drawObject(gameObject, gameObject.x + gameObject.image.width, this.height - gameObject.image.height);
@@ -52,7 +56,7 @@ class TappyPlaneGame extends Game {
         if (gameObject.x == gameObject.image.width * -1) gameObject.x = 0;
     }
 
-    drawBackground(){
+    drawBackground() {
         this.drawAsBackground(this.background, 1);
         this.drawAsBackground(this.ground, 4);
     }
@@ -61,11 +65,13 @@ class TappyPlaneGame extends Game {
 
 class StageGetReady extends Stage {
 
-    constructor() {
-        super()
+    start(game) {
         this.nextStage = false;
         this.canNextStage = false;
         this.alpha = 1;
+        game.planeYellow.x = 100;
+        game.textGetReady.y = 100;
+        game.tapRight.y = 300;
 
         Events.addEventListener(Events.clickOnCanvas, e => {
             this.nextStage = true;
@@ -75,7 +81,7 @@ class StageGetReady extends Stage {
     draw(game) {
         game.clear();
         game.drawBackground();
-        game.drawAndCenterY(game.planeYellow, 100);
+        game.drawAndCenterY(game.planeYellow);
 
         if (this.nextStage) {
             if (this.alpha > 0) this.alpha -= 0.04;
@@ -88,24 +94,21 @@ class StageGetReady extends Stage {
             game.ctx.globalAlpha = this.alpha;
         }
 
-        game.drawAndCenterX(game.textGetReady, 100);
-        game.drawAndCenterX(game.tapRight, 300);
+        game.drawAndCenterX(game.textGetReady);
+        game.drawAndCenterX(game.tapRight);
 
         game.ctx.globalAlpha = 1.0;
 
-        if (this.canNextStage) game.setStage('stagePlay');
+        if (this.canNextStage) game.setStage('play');
 
     }
 }
 
 class StagePlay extends Stage {
 
-    constructor() {
-        super();
-        this.drop = -2;
-    }
-
     start(game) {
+        this.drop = -2;
+
         Events.addEventListener(Events.clickOnCanvas, e => {
             if (this.drop < 0) this.drop += 6;
         });
@@ -130,8 +133,62 @@ class StagePlay extends Stage {
 }
 
 
+class StageGameOver extends Stage {
+
+    start(game) {
+        this.nextStage = false;
+        this.canNextStage = false;
+        this.alpha = 0;
+        this.animationEnd = false;
+        game.planeYellow.x = game.planeYellow.image.width * -1;
+        game.textGameOver.y = 100;
+
+        Events.addEventListener(Events.clickOnCanvas, e => {
+            if (this.animationEnd) this.nextStage = true;
+        });
+    }
+
+    draw(game) {
+        game.clear();
+        game.drawBackground();
+
+        if (this.alpha < 1 && !this.nextStage) this.alpha += 0.04;
+
+        if (game.planeYellow.x < 100) {
+            game.planeYellow.x += 4;
+
+        } else {
+            this.animationEnd = true;
+        }
+
+
+        game.drawAndCenterY(game.planeYellow, 100);
+
+        if (this.nextStage) {
+            if (this.alpha > 0) this.alpha -= 0.04;
+
+            if (this.alpha < 0) {
+                this.alpha = 0;
+                this.canNextStage = true;
+            }
+
+        }
+
+        game.ctx.globalAlpha = this.alpha;
+        game.drawAndCenterX(game.textGameOver);
+        game.drawAndCenterX(game.tapRight);
+        game.ctx.globalAlpha = 1;
+
+        if (this.canNextStage)
+            game.setStage('play');
+
+    }
+}
+
 
 window.onload = () => {
     let game = new TappyPlaneGame();
     game.startGame();
 };
+
+

@@ -94,6 +94,24 @@ class AnimatedGameObject extends GameObject {
     }
 }
 
+
+class MultipleGameObject {
+
+    constructor(id, baseGameObject) {
+        this.id = id;
+        this.base = baseGameObject;
+        this.objects = [];
+    }
+
+    add() {
+        let clone = Object.assign({}, this.base);
+        this.objects.push(clone);
+    }
+    clear() {
+        this.objects = [];
+    }
+}
+
 // Stage base class
 
 class Stage {

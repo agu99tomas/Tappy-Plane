@@ -25,10 +25,12 @@ class TappyPlaneGame extends Game {
 
         // Rocks
         let gameObjectRock = new StaticGameObject('rock', 'rockGrass.png');
-        this.addGameObject(gameObjectRock);
+        let multipleGameObjectRock = new MultipleGameObject('rocks', gameObjectRock);
+        this.addGameObject(multipleGameObjectRock);
 
         let gameObjectRockDown = new StaticGameObject('rockDown', 'rockGrassDown.png');
-        this.addGameObject(gameObjectRockDown);
+        let multipleGameObjectRockDown = new MultipleGameObject('rocksDown', gameObjectRockDown);
+        this.addGameObject(multipleGameObjectRockDown);
 
         // UI
         let gameObjectTextGetReady = new StaticGameObject('textGetReady', 'textGetReady.png');
@@ -76,6 +78,7 @@ class StageGetReady extends Stage {
         Events.addEventListener(Events.clickOnCanvas, e => {
             this.nextStage = true;
         });
+
     }
 
     draw(game) {
@@ -107,20 +110,60 @@ class StageGetReady extends Stage {
 class StagePlay extends Stage {
 
     start(game) {
-        this.drop = -2;
+        this.drop = -3;
         this.gameOver = false;
         this.canNextStage = false;
-
+        
         Events.addEventListener(Events.clickOnCanvas, e => {
             if (this.drop < 0 && !this.gameOver) this.drop += 6;
         });
+        
+        // Rocks test
+
+        game.rocks.base.x = game.width + game.rocks.base.image.width;
+        game.rocks.base.y = game.height - game.rocks.base.image.height;
+        game.rocks.add()
+        
+        game.rocksDown.base.x = game.width + game.rocksDown.base.image.width;
+
+        setTimeout(() => {
+            game.rocksDown.base.y = 0 - Random.randomInt(0, game.rocksDown.base.image.height * 0.20);
+            game.rocksDown.add()
+        }, Random.randomInt(1000, 2000));
+        
+        this.interval = setInterval(() => {
+            game.rocks.base.y = (game.height - game.rocks.base.image.height) + Random.randomInt(0, game.rocks.base.image.height * 0.20);
+            game.rocks.add()
+
+            setTimeout(() => {
+                game.rocksDown.base.y = 0 - Random.randomInt(0, game.rocksDown.base.image.height * 0.20);
+                game.rocksDown.add()
+            }, Random.randomInt(1000, 2000));
+
+
+        }, 3000);
+
+        
+        
 
     }
 
     draw(game) {
+
         game.clear();
-        game.drawBackground();
+        
+        game.drawAsBackground(game.background, 1);
+        game.rocks.objects.forEach(rock => {
+            rock.x -= 4;
+            game.drawObject(rock);
+        });
+        game.rocksDown.objects.forEach(rockDown => {
+            rockDown.x -= 4;
+            game.drawObject(rockDown);
+        });
         game.drawObject(game.planeYellow);
+        
+        game.drawAsBackground(game.ground, 4);
 
         if (this.gameOver) {
             game.planeYellow.x-=4;
@@ -135,13 +178,19 @@ class StagePlay extends Stage {
             this.gameOver = true;
         }
 
-        if (this.canNextStage) game.setStage('gameOver');
+        if (this.canNextStage){
+            clearInterval(this.interval);
+            game.rocks.clear();
+            game.setStage('gameOver');
+        }
         /*ctx.save();
         ctx.translate(objects.planeYellow.x, objects.planeYellow.y);
         ctx.rotate(-10);
         ctx.translate(-objects.planeYellow.x,-objects.planeYellow.y);
         ctx.drawImage(objects.planeYellow.image, objects.planeYellow.x, objects.planeYellow.y);
         ctx.restore();*/
+
+
 
     }
 
@@ -177,7 +226,7 @@ class StageGameOver extends Stage {
         }
 
 
-        game.drawAndCenterY(game.planeYellow, 100);
+        game.drawAndCenterY(game.planeYellow);
 
         if (this.nextStage) {
             if (this.alpha > 0) this.alpha -= 0.04;

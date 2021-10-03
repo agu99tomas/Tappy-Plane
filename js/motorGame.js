@@ -147,7 +147,8 @@ class CollectionGameObject {
 
     remove(gameObject) {
         const index = this.objects.indexOf(gameObject);
-        this.objects.splice(index, 1);
+        if (index !== -1) 
+            this.objects.splice(index, 1);
     }
 
     removeAll(gameObjects) {

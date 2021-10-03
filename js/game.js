@@ -1,21 +1,25 @@
 
 class RocksCollection extends CollectionGameObject {
     draw(game) {
+        let removeRocks = []
         game.rocks.objects.forEach(rock => {
             rock.x -= 4;
             if (rock.x + rock.image.width <= 0)
-                game.rocks.remove(rock);
+                removeRocks.push(rock);
         });
+        game.rocks.removeAll(removeRocks);
     }
 }
 
 class RocksDownCollection extends CollectionGameObject {
     draw(game) {
+        let removeRocksDown = []
         game.rocksDown.objects.forEach(rockDown => {
             rockDown.x -= 4;
             if (rockDown.x + rockDown.image.width <= 0)
-                game.rocksDown.remove(rockDown);
+                removeRocksDown.push(rockDown);
         });
+        game.rocks.removeAll(removeRocksDown);
     }
 }
 
@@ -185,12 +189,12 @@ class StagePlay extends Stage {
         game.drawAsBackground(game.ground, 4);
 
         game.rocksDown.objects.forEach(rock => {
-            if (game.planeYellow.collision(rock, 15, 15, 100, 0, true, game)) 
+            if (game.planeYellow.collision(rock, 15, 15, 100, 0, false, game)) 
                 this.gameOver = true;
         });
 
         game.rocks.objects.forEach(rock => {
-            if (game.planeYellow.collision(rock, 15, 15, 100, 0, true, game)) 
+            if (game.planeYellow.collision(rock, 15, 15, 100, 0, false, game)) 
                 this.gameOver = true;
         });
 

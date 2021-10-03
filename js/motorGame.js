@@ -51,6 +51,8 @@ class GameObject {
         this.y = 0;
         this.image = undefined;
     }
+
+    move(game){}
 }
 
 class StaticGameObject extends GameObject {
@@ -95,7 +97,7 @@ class AnimatedGameObject extends GameObject {
 }
 
 
-class MultipleGameObject {
+class CollectionGameObject {
 
     constructor(id, baseGameObject) {
         this.id = id;
@@ -107,9 +109,23 @@ class MultipleGameObject {
         let clone = Object.assign({}, this.base);
         this.objects.push(clone);
     }
+
     clear() {
         this.objects = [];
     }
+
+    remove(gameObject){
+        const index = this.objects.indexOf(gameObject);
+        this.objects.splice(index, 1);
+    }
+
+    removeAll(gameObjects){
+        gameObjects.forEach(gameObject => {
+            this.remove(gameObject);
+        });
+    }
+
+    move(game){}
 }
 
 // Stage base class
@@ -183,12 +199,25 @@ class Game {
     }
 
     drawObject(gameObject, x, y) {
+        //gameObject.move(this);
+        
         if (gameObject instanceof AnimatedGameObject) gameObject.animation(this.frame);
+        
         if (x == undefined && y == undefined) {
             this.ctx.drawImage(gameObject.image, gameObject.x, gameObject.y);
         } else {
+            if (gameObject.id == 'rock') {
+                console.log(gameObject.id == 'rock')
+            }
             this.ctx.drawImage(gameObject.image, x || 0, y);
         }
+    }
+
+    drawCollectionGameObject(collectionGameObject) {
+        collectionGameObject.move(this);
+        collectionGameObject.objects.forEach(gameObject => {
+            this.drawObject(gameObject);
+        });
     }
 
     drawAndCenterY(gameObject) {

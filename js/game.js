@@ -1,4 +1,23 @@
 
+class RocksCollection extends CollectionGameObject {
+    move(game) {
+        game.rocks.objects.forEach(rock => {
+            rock.x -= 4;
+            if (rock.x + rock.image.width <= 0)
+                game.rocks.remove(rock);
+        });
+    }
+}
+
+class RocksDownCollection extends CollectionGameObject {
+    move(game) {
+        game.rocksDown.objects.forEach(rockDown => {
+            rockDown.x -= 4;
+            if (rockDown.x + rockDown.image.width <= 0)
+                game.rocksDown.remove(rockDown);
+        });
+    }
+}
 
 class TappyPlaneGame extends Game {
 
@@ -25,11 +44,11 @@ class TappyPlaneGame extends Game {
 
         // Rocks
         let gameObjectRock = new StaticGameObject('rock', 'rockGrass.png');
-        let multipleGameObjectRock = new MultipleGameObject('rocks', gameObjectRock);
+        let multipleGameObjectRock = new RocksCollection('rocks', gameObjectRock);
         this.addGameObject(multipleGameObjectRock);
 
         let gameObjectRockDown = new StaticGameObject('rockDown', 'rockGrassDown.png');
-        let multipleGameObjectRockDown = new MultipleGameObject('rocksDown', gameObjectRockDown);
+        let multipleGameObjectRockDown = new RocksDownCollection('rocksDown', gameObjectRockDown);
         this.addGameObject(multipleGameObjectRockDown);
 
         // UI
@@ -113,72 +132,72 @@ class StagePlay extends Stage {
         this.drop = -3;
         this.gameOver = false;
         this.canNextStage = false;
-        
+
         Events.addEventListener(Events.clickOnCanvas, e => {
-            if (this.drop < 0 && !this.gameOver) this.drop += 6;
+            if (! (this.drop >= 18)) this.drop += 6;
         });
-        
+
         // Rocks test
 
         game.rocks.base.x = game.width + game.rocks.base.image.width;
         game.rocks.base.y = game.height - game.rocks.base.image.height;
         game.rocks.add()
-        
+
         game.rocksDown.base.x = game.width + game.rocksDown.base.image.width;
 
         setTimeout(() => {
-            game.rocksDown.base.y = 0 - Random.randomInt(0, game.rocksDown.base.image.height * 0.20);
+            game.rocksDown.base.y = 0 - Random.randomInt(0, game.rocksDown.base.image.height * 0.30);
             game.rocksDown.add()
         }, Random.randomInt(1000, 2000));
-        
+
         this.interval = setInterval(() => {
             game.rocks.base.y = (game.height - game.rocks.base.image.height) + Random.randomInt(0, game.rocks.base.image.height * 0.20);
             game.rocks.add()
 
             setTimeout(() => {
-                game.rocksDown.base.y = 0 - Random.randomInt(0, game.rocksDown.base.image.height * 0.20);
+                game.rocksDown.base.y = 0 - Random.randomInt(0, game.rocksDown.base.image.height * 0.30);
+
                 game.rocksDown.add()
             }, Random.randomInt(1000, 2000));
 
 
         }, 3000);
 
-        
-        
+
+
 
     }
 
     draw(game) {
 
         game.clear();
-        
+
         game.drawAsBackground(game.background, 1);
-        game.rocks.objects.forEach(rock => {
-            rock.x -= 4;
-            game.drawObject(rock);
-        });
-        game.rocksDown.objects.forEach(rockDown => {
-            rockDown.x -= 4;
-            game.drawObject(rockDown);
-        });
+
+        // Rocks
+        game.drawCollectionGameObject(game.rocks);
+
+        // Rocks Down
+        game.drawCollectionGameObject(game.rocksDown);
+
         game.drawObject(game.planeYellow);
-        
+
         game.drawAsBackground(game.ground, 4);
 
         if (this.gameOver) {
-            game.planeYellow.x-=4;
-           if(game.planeYellow.image.width + game.planeYellow.x < 0 )
+            game.planeYellow.x -= 4;
+            if (game.planeYellow.image.width + game.planeYellow.x < 0)
                 this.canNextStage = true;
-        }else{
+        } else {
             game.planeYellow.y -= this.drop;
             this.drop -= 0.1;
         }
 
-        if ( (game.planeYellow.y + game.planeYellow.image.height) >=  (game.height - game.ground.image.height ) + 40 ) {
+        if ((game.planeYellow.y + game.planeYellow.image.height) >= (game.height - game.ground.image.height) + 40) {
             this.gameOver = true;
         }
 
-        if (this.canNextStage){
+        if (this.canNextStage) {
             clearInterval(this.interval);
             game.rocks.clear();
             game.setStage('gameOver');

@@ -8,9 +8,6 @@
   <br>
 </h1>
 
-<h4 align="center">Why fly by plane if you can play this game?</h4>
-<br>  
-
 <p align="center">
   <img src="preview.png" alt="Tappy Plane Photo">
 </p>

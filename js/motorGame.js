@@ -54,12 +54,28 @@ class GameObject {
 
     move(game) { }
 
-    collision(gameObject, decreaseWidth = 0, decreaseHeight = 0) {
-        return (this.x < gameObject.x + (gameObject.image.width - decreaseWidth) &&
-            this.x + this.image.width > gameObject.x &&
-            this.y < gameObject.y + (gameObject.image.height - decreaseHeight) &&
-            this.y + this.image.height > gameObject.y)
+    collision(gameObject, decreaseHorizontal1, decreaseVertical1, decreaseHorizontal2, decreaseVertical2, helper = false, game = undefined) {
+
+        if (helper && game !== undefined) {
+            // this
+            game.ctx.beginPath();
+            game.ctx.rect((this.x + decreaseHorizontal1 / 2), (this.y + decreaseVertical1 / 2) ,
+             (this.image.width - decreaseHorizontal1), (this.image.height - decreaseVertical1));
+            game.ctx.stroke();
+            // gameObject
+            game.ctx.beginPath();
+            game.ctx.rect((gameObject.x +  decreaseHorizontal2 / 2 ), gameObject.y + (decreaseVertical2 / 2),
+             (gameObject.image.width - decreaseHorizontal2), (gameObject.image.height - decreaseVertical2));
+            game.ctx.stroke();
+        }
+        
+        
+        return (this.x < (gameObject.x +  decreaseHorizontal2 / 2) + (gameObject.image.width - decreaseHorizontal2) &&
+            this.x + this.image.width > (gameObject.x +  decreaseHorizontal2 / 2) &&
+            this.y < (gameObject.y + decreaseVertical2 / 2) + (gameObject.image.height - decreaseVertical2) &&
+            this.y + this.image.height > ( gameObject.y + decreaseVertical2 / 2))
     }
+
 }
 
 class StaticGameObject extends GameObject {

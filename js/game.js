@@ -136,14 +136,17 @@ class StagePlay extends Stage {
         this.drop = -3;
         this.gameOver = false;
         this.canNextStage = false;
-        
+
 
         Events.addEventListener(Events.clickOnCanvas, e => {
+            console.log('CLICK ON CANVAS')
             if (this.drop <= 2)
                 this.drop += 5;
         });
 
         // Rocks test
+        game.rocks.clear();
+        game.rocksDown.clear();
 
         game.rocks.base.x = game.width + game.rocks.base.image.width;
         game.rocks.base.y = game.height - game.rocks.base.image.height;
@@ -157,13 +160,13 @@ class StagePlay extends Stage {
         }, Random.randomInt(1000, 2000));
 
         this.interval = setInterval(() => {
+            console.log("INTERVAL")
             game.rocks.base.y = (game.height - game.rocks.base.image.height) + Random.randomInt(0, game.rocks.base.image.height * 0.20);
             game.rocks.add()
-            
+
             setTimeout(() => {
                 game.rocksDown.base.y = 0 - Random.randomInt(0, game.rocksDown.base.image.height * 0.30);
-
-                game.rocksDown.add()
+                game.rocksDown.add();
             }, Random.randomInt(1000, 2000));
 
 
@@ -189,12 +192,12 @@ class StagePlay extends Stage {
         game.drawAsBackground(game.ground, 4);
 
         game.rocksDown.objects.forEach(rock => {
-            if (game.planeYellow.collision(rock, 15, 15, 100, 0, false, game)) 
+            if (game.planeYellow.collision(rock, 15, 15, 100, 0, false, game))
                 this.gameOver = true;
         });
 
         game.rocks.objects.forEach(rock => {
-            if (game.planeYellow.collision(rock, 15, 15, 100, 0, false, game)) 
+            if (game.planeYellow.collision(rock, 15, 15, 100, 0, false, game))
                 this.gameOver = true;
         });
 
@@ -213,7 +216,6 @@ class StagePlay extends Stage {
 
         if (this.canNextStage) {
             clearInterval(this.interval);
-            game.rocks.clear();
             game.setStage('gameOver');
         }
         /*ctx.save();

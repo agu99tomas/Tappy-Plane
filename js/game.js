@@ -132,9 +132,13 @@ class StagePlay extends Stage {
         this.drop = -3;
         this.gameOver = false;
         this.canNextStage = false;
+        console.log(game.rocks.objects);
 
         Events.addEventListener(Events.clickOnCanvas, e => {
-            if (! (this.drop >= 18)) this.drop += 6;
+            if (this.drop <= 2){
+                this.drop += 5;
+                console.log(this.drop);
+            } 
         });
 
         // Rocks test
@@ -153,7 +157,7 @@ class StagePlay extends Stage {
         this.interval = setInterval(() => {
             game.rocks.base.y = (game.height - game.rocks.base.image.height) + Random.randomInt(0, game.rocks.base.image.height * 0.20);
             game.rocks.add()
-
+            console.log("INTERVAL");
             setTimeout(() => {
                 game.rocksDown.base.y = 0 - Random.randomInt(0, game.rocksDown.base.image.height * 0.30);
 
@@ -174,15 +178,18 @@ class StagePlay extends Stage {
 
         game.drawAsBackground(game.background, 1);
 
-        // Rocks
         game.drawCollectionGameObject(game.rocks);
 
-        // Rocks Down
         game.drawCollectionGameObject(game.rocksDown);
 
         game.drawObject(game.planeYellow);
 
         game.drawAsBackground(game.ground, 4);
+
+        game.rocksDown.objects.forEach(rock => {
+            if (game.planeYellow.collision(rock, 160, 10)) 
+                this.gameOver = true;
+        });
 
         if (this.gameOver) {
             game.planeYellow.x -= 4;
@@ -208,8 +215,6 @@ class StagePlay extends Stage {
         ctx.translate(-objects.planeYellow.x,-objects.planeYellow.y);
         ctx.drawImage(objects.planeYellow.image, objects.planeYellow.x, objects.planeYellow.y);
         ctx.restore();*/
-
-
 
     }
 

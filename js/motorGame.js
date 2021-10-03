@@ -52,7 +52,14 @@ class GameObject {
         this.image = undefined;
     }
 
-    move(game){}
+    move(game) { }
+
+    collision(gameObject, decreaseWidth = 0, decreaseHeight = 0) {
+        return (this.x < gameObject.x + (gameObject.image.width - decreaseWidth) &&
+            this.x + this.image.width > gameObject.x &&
+            this.y < gameObject.y + (gameObject.image.height - decreaseHeight) &&
+            this.y + this.image.height > gameObject.y)
+    }
 }
 
 class StaticGameObject extends GameObject {
@@ -114,18 +121,18 @@ class CollectionGameObject {
         this.objects = [];
     }
 
-    remove(gameObject){
+    remove(gameObject) {
         const index = this.objects.indexOf(gameObject);
         this.objects.splice(index, 1);
     }
 
-    removeAll(gameObjects){
+    removeAll(gameObjects) {
         gameObjects.forEach(gameObject => {
             this.remove(gameObject);
         });
     }
 
-    move(game){}
+    move(game) { }
 }
 
 // Stage base class
@@ -199,10 +206,11 @@ class Game {
     }
 
     drawObject(gameObject, x, y) {
-        //gameObject.move(this);
-        
+        if (typeof gameObject.move === "function")
+            gameObject.move(this);
+
         if (gameObject instanceof AnimatedGameObject) gameObject.animation(this.frame);
-        
+
         if (x == undefined && y == undefined) {
             this.ctx.drawImage(gameObject.image, gameObject.x, gameObject.y);
         } else {

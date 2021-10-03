@@ -135,10 +135,8 @@ class StagePlay extends Stage {
         
 
         Events.addEventListener(Events.clickOnCanvas, e => {
-            if (this.drop <= 2){
+            if (this.drop <= 2)
                 this.drop += 5;
-        
-            } 
         });
 
         // Rocks test
@@ -187,12 +185,12 @@ class StagePlay extends Stage {
         game.drawAsBackground(game.ground, 4);
 
         game.rocksDown.objects.forEach(rock => {
-            if (game.planeYellow.collision(rock, 50, 50, 100, 0, true, game)) 
+            if (game.planeYellow.collision(rock, 15, 15, 100, 0, true, game)) 
                 this.gameOver = true;
         });
 
         game.rocks.objects.forEach(rock => {
-            if (game.planeYellow.collision(rock, 50, 50, 100, 0, true, game)) 
+            if (game.planeYellow.collision(rock, 15, 15, 100, 0, true, game)) 
                 this.gameOver = true;
         });
 

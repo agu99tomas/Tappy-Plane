@@ -55,25 +55,33 @@ class GameObject {
     draw(game) { }
 
     collision(gameObject, decreaseHorizontal1, decreaseVertical1, decreaseHorizontal2, decreaseVertical2, helper = false, game = undefined) {
+        // this
+        let x1 = this.x + decreaseHorizontal1 / 2;
+        let y1 = this.y + decreaseVertical1 / 2;
+        let width1 = this.image.width - decreaseHorizontal1;
+        let height1 = this.image.height - decreaseVertical1;
+        // GameObject
+        let x2 = gameObject.x + decreaseHorizontal2 / 2;
+        let y2 = gameObject.y + decreaseVertical2 / 2;
+        let width2 = gameObject.image.width - decreaseHorizontal2;
+        let height2 = gameObject.image.height - decreaseVertical2;
 
         if (helper && game !== undefined) {
             // this
             game.ctx.beginPath();
-            game.ctx.rect((this.x + decreaseHorizontal1 / 2), (this.y + decreaseVertical1 / 2) ,
-             (this.image.width - decreaseHorizontal1), (this.image.height - decreaseVertical1));
+            game.ctx.rect(x1, y1, width1, height1);
             game.ctx.stroke();
             // gameObject
             game.ctx.beginPath();
-            game.ctx.rect((gameObject.x +  decreaseHorizontal2 / 2 ), gameObject.y + (decreaseVertical2 / 2),
-             (gameObject.image.width - decreaseHorizontal2), (gameObject.image.height - decreaseVertical2));
+            game.ctx.rect(x2, y2, width2, height2);
             game.ctx.stroke();
         }
-        
-        
-        return (this.x < (gameObject.x +  decreaseHorizontal2 / 2) + (gameObject.image.width - decreaseHorizontal2) &&
-            this.x + this.image.width > (gameObject.x +  decreaseHorizontal2 / 2) &&
-            this.y < (gameObject.y + decreaseVertical2 / 2) + (gameObject.image.height - decreaseVertical2) &&
-            this.y + this.image.height > ( gameObject.y + decreaseVertical2 / 2))
+
+
+        return (x1 < x2 + width2 &&
+            x1 + width1 > x2 &&
+            y1 < y2 + height2 &&
+            y1 + height1 > y2)
     }
 
 }

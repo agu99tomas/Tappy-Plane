@@ -52,7 +52,7 @@ class GameObject {
         this.image = undefined;
     }
 
-    move(game) { }
+    draw(game) { }
 
     collision(gameObject, decreaseHorizontal1, decreaseVertical1, decreaseHorizontal2, decreaseVertical2, helper = false, game = undefined) {
 
@@ -148,7 +148,7 @@ class CollectionGameObject {
         });
     }
 
-    move(game) { }
+    draw(game) { }
 }
 
 // Stage base class
@@ -222,8 +222,8 @@ class Game {
     }
 
     drawObject(gameObject, x, y) {
-        if (typeof gameObject.move === "function")
-            gameObject.move(this);
+        if (typeof gameObject.draw === "function")
+            gameObject.draw(this);
 
         if (gameObject instanceof AnimatedGameObject) gameObject.animation(this.frame);
 
@@ -238,7 +238,7 @@ class Game {
     }
 
     drawCollectionGameObject(collectionGameObject) {
-        collectionGameObject.move(this);
+        collectionGameObject.draw(this);
         collectionGameObject.objects.forEach(gameObject => {
             this.drawObject(gameObject);
         });

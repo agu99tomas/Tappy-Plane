@@ -1,6 +1,6 @@
 
 class RocksCollection extends CollectionGameObject {
-    move(game) {
+    draw(game) {
         game.rocks.objects.forEach(rock => {
             rock.x -= 4;
             if (rock.x + rock.image.width <= 0)
@@ -10,7 +10,7 @@ class RocksCollection extends CollectionGameObject {
 }
 
 class RocksDownCollection extends CollectionGameObject {
-    move(game) {
+    draw(game) {
         game.rocksDown.objects.forEach(rockDown => {
             rockDown.x -= 4;
             if (rockDown.x + rockDown.image.width <= 0)

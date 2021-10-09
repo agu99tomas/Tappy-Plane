@@ -133,7 +133,7 @@ class StageGetReady extends Stage {
 class StagePlay extends Stage {
 
     start(game) {
-        this.drop = -3;
+        this.drop = -6;
         this.gameOver = false;
         this.canNextStage = false;
 

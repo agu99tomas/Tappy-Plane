@@ -54,7 +54,7 @@ class GameObject {
 
     draw(game) { }
 
-    collision(gameObject, decreaseHorizontal1, decreaseVertical1, decreaseHorizontal2, decreaseVertical2, helper = false, game = undefined) {
+    collision(gameObject, decreaseHorizontal1, decreaseVertical1, decreaseHorizontal2, decreaseVertical2, game = undefined, helper = false ) {
         // this
         let x1 = this.x + decreaseHorizontal1 / 2;
         let y1 = this.y + decreaseVertical1 / 2;
@@ -183,6 +183,7 @@ class Game {
         this.width = this.canvas.width;
         this.height = this.canvas.height;
         this.ctx = canvas.getContext("2d");
+        this.onStart = true;
 
         // Stage
         this.stage = new Stage();
@@ -202,7 +203,7 @@ class Game {
     setStage(id) {
         this.stage = this.stages[id];
         this.firstFrame = true;
-        this.stage.start(this);
+        this.onStart = true;
     }
 
     addGameObject(gameObject) {
@@ -220,6 +221,10 @@ class Game {
 
     startLoop() {
         setInterval(() => {
+            if(this.onStart){
+                this.stage.start(this);
+                this.onStart = false;
+            }
             if (this.frame == 60) this.frame = 1;
             this.stage.draw(this);
             this.frame++;
@@ -233,6 +238,7 @@ class Game {
     drawObject(gameObject, x, y) {
         if (typeof gameObject.draw === "function")
             gameObject.draw(this);
+            
 
         if (gameObject instanceof AnimatedGameObject) gameObject.animation(this.frame);
 
@@ -253,14 +259,12 @@ class Game {
         });
     }
 
-    drawAndCenterY(gameObject) {
+    centerY(gameObject) {
         gameObject.y = (this.height / 2) - gameObject.image.height / 2;
-        this.drawObject(gameObject);
     }
 
-    drawAndCenterX(gameObject) {
+    centerX(gameObject) {
         gameObject.x = (this.width / 2) - gameObject.image.width / 2;
-        this.drawObject(gameObject);
     }
 }
 

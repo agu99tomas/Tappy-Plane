@@ -1,28 +1,4 @@
 
-class RocksCollection extends CollectionGameObject {
-    draw(game) {
-        let removeRocks = []
-        game.rocks.objects.forEach(rock => {
-            rock.x -= 4;
-            if (rock.x + rock.image.width <= 0)
-                removeRocks.push(rock);
-        });
-        game.rocks.removeAll(removeRocks);
-    }
-}
-
-class RocksDownCollection extends CollectionGameObject {
-    draw(game) {
-        let removeRocksDown = []
-        game.rocksDown.objects.forEach(rockDown => {
-            rockDown.x -= 4;
-            if (rockDown.x + rockDown.image.width <= 0)
-                removeRocksDown.push(rockDown);
-        });
-        game.rocks.removeAll(removeRocksDown);
-    }
-}
-
 class TappyPlaneGame extends Game {
 
     loadAllStages() {
@@ -38,15 +14,13 @@ class TappyPlaneGame extends Game {
     }
 
     loadAllGameObjects() {
-        // Background
+
         let gameObjectBackground = new StaticGameObject('background', 'background.png');
         this.addGameObject(gameObjectBackground);
 
-        // Ground
         let gameObjectGround = new StaticGameObject('ground', 'groundGrass.png');
         this.addGameObject(gameObjectGround);
 
-        // Rocks
         let gameObjectRock = new StaticGameObject('rock', 'rockGrass.png');
         let multipleGameObjectRock = new RocksCollection('rocks', gameObjectRock);
         this.addGameObject(multipleGameObjectRock);
@@ -67,9 +41,11 @@ class TappyPlaneGame extends Game {
 
         // Game
         let gameImagesPlaneYellow = ['planeYellow1.png', 'planeYellow2.png', 'planeYellow3.png'];
-        let gameObjectPlaneYellow = new AnimatedGameObject('planeYellow', gameImagesPlaneYellow, 2);
+        let gameObjectPlaneYellow = new PlaneYellow('planeYellow', gameImagesPlaneYellow, 2);
         this.addGameObject(gameObjectPlaneYellow);
+
     }
+
 
     drawAsBackground(gameObject, velocity) {
 
@@ -88,15 +64,101 @@ class TappyPlaneGame extends Game {
 }
 
 
+
+class RocksCollection extends CollectionGameObject {
+    draw(game) {
+        let removeRocks = []
+        game.rocks.objects.forEach(rock => {
+            rock.x -= 4;
+            if (rock.x + rock.image.width <= 0)
+                removeRocks.push(rock);
+        });
+        game.rocks.removeAll(removeRocks);
+    }
+
+}
+
+class RocksDownCollection extends CollectionGameObject {
+    draw(game) {
+        let removeRocksDown = []
+        game.rocksDown.objects.forEach(rockDown => {
+            rockDown.x -= 4;
+            if (rockDown.x + rockDown.image.width <= 0)
+                removeRocksDown.push(rockDown);
+        });
+        game.rocks.removeAll(removeRocksDown);
+    }
+
+}
+
+class PlaneYellow extends AnimatedGameObject {
+    constructor(id, imageFileNames, animationSpeed) {
+        super(id, imageFileNames, animationSpeed);
+        this.drop = -6;
+        this.jumpForce = 5;
+        this.gravity = 0.1;
+    }
+
+    jump() {
+        if (this.drop <= 2) this.drop += this.jumpForce;
+    }
+
+    fall() {
+        this.y -= this.drop;
+        this.drop -= this.gravity;
+    }
+
+    draw(game) {
+
+    }
+
+    hasCollision(game) {
+        let detectedCollision = false;
+
+        game.rocksDown.objects.forEach(rock => {
+            if (game.planeYellow.collision(rock, 15, 15, 100, 0, game, false))
+                detectedCollision = true;
+        });
+
+        game.rocks.objects.forEach(rock => {
+            if (game.planeYellow.collision(rock, 15, 15, 100, 0, game, false))
+                detectedCollision = true;
+        });
+
+        // Has Collision with ground
+        if ((game.planeYellow.y + game.planeYellow.image.height) >= (game.height - game.ground.image.height) + 40) {
+            detectedCollision = true;
+        }
+
+        return detectedCollision;
+    }
+
+    lostAndGoLeft(game) {
+        game.planeYellow.x -= 4;
+        return game.planeYellow.image.width + game.planeYellow.x < 0
+    }
+
+}
+
+
+
 class StageGetReady extends Stage {
 
     start(game) {
         this.nextStage = false;
         this.canNextStage = false;
         this.alpha = 1;
-        game.planeYellow.x = 100;
+
         game.textGetReady.y = 100;
+        game.centerX(game.textGetReady);
+
         game.tapRight.y = 300;
+        game.centerX(game.tapRight);
+
+
+        game.planeYellow.x = 100;
+        game.centerY(game.planeYellow);
+
 
         Events.addEventListener(Events.clickOnCanvas, e => {
             this.nextStage = true;
@@ -107,7 +169,7 @@ class StageGetReady extends Stage {
     draw(game) {
         game.clear();
         game.drawBackground();
-        game.drawAndCenterY(game.planeYellow);
+        game.drawObject(game.planeYellow);
 
         if (this.nextStage) {
             if (this.alpha > 0) this.alpha -= 0.04;
@@ -120,8 +182,8 @@ class StageGetReady extends Stage {
             game.ctx.globalAlpha = this.alpha;
         }
 
-        game.drawAndCenterX(game.textGetReady);
-        game.drawAndCenterX(game.tapRight);
+        game.drawObject(game.textGetReady);
+        game.drawObject(game.tapRight)
 
         game.ctx.globalAlpha = 1.0;
 
@@ -133,48 +195,17 @@ class StageGetReady extends Stage {
 class StagePlay extends Stage {
 
     start(game) {
-        this.drop = -6;
-        this.gameOver = false;
+        this.nextStage = false;
         this.canNextStage = false;
 
+        game.planeYellow.drop = -6;
+        
 
         Events.addEventListener(Events.clickOnCanvas, e => {
-            console.log('CLICK ON CANVAS')
-            if (this.drop <= 2)
-                this.drop += 5;
+            game.planeYellow.jump();
         });
 
-        // Rocks test
-        game.rocks.clear();
-        game.rocksDown.clear();
-
-        game.rocks.base.x = game.width + game.rocks.base.image.width;
-        game.rocks.base.y = game.height - game.rocks.base.image.height;
-        game.rocks.add()
-
-        game.rocksDown.base.x = game.width + game.rocksDown.base.image.width;
-
-        setTimeout(() => {
-            game.rocksDown.base.y = 0 - Random.randomInt(0, game.rocksDown.base.image.height * 0.30);
-            game.rocksDown.add()
-        }, Random.randomInt(1000, 2000));
-
-        this.interval = setInterval(() => {
-            console.log("INTERVAL")
-            game.rocks.base.y = (game.height - game.rocks.base.image.height) + Random.randomInt(0, game.rocks.base.image.height * 0.20);
-            game.rocks.add()
-
-            setTimeout(() => {
-                game.rocksDown.base.y = 0 - Random.randomInt(0, game.rocksDown.base.image.height * 0.30);
-                game.rocksDown.add();
-            }, Random.randomInt(1000, 2000));
-
-
-        }, 3000);
-
-
-
-
+        this.generateRandomRocks(game);
     }
 
     draw(game) {
@@ -191,40 +222,48 @@ class StagePlay extends Stage {
 
         game.drawAsBackground(game.ground, 4);
 
-        game.rocksDown.objects.forEach(rock => {
-            if (game.planeYellow.collision(rock, 15, 15, 100, 0, false, game))
-                this.gameOver = true;
-        });
-
-        game.rocks.objects.forEach(rock => {
-            if (game.planeYellow.collision(rock, 15, 15, 100, 0, false, game))
-                this.gameOver = true;
-        });
-
-        if (this.gameOver) {
-            game.planeYellow.x -= 4;
-            if (game.planeYellow.image.width + game.planeYellow.x < 0)
-                this.canNextStage = true;
-        } else {
-            game.planeYellow.y -= this.drop;
-            this.drop -= 0.1;
+        if (game.planeYellow.hasCollision(game)) {
+            this.nextStage = true;
         }
 
-        if ((game.planeYellow.y + game.planeYellow.image.height) >= (game.height - game.ground.image.height) + 40) {
-            this.gameOver = true;
+        if (this.nextStage) {
+            this.canNextStage = game.planeYellow.lostAndGoLeft(game);
+        } else {
+            game.planeYellow.fall();
         }
 
         if (this.canNextStage) {
             clearInterval(this.interval);
             game.setStage('gameOver');
         }
-        /*ctx.save();
-        ctx.translate(objects.planeYellow.x, objects.planeYellow.y);
-        ctx.rotate(-10);
-        ctx.translate(-objects.planeYellow.x,-objects.planeYellow.y);
-        ctx.drawImage(objects.planeYellow.image, objects.planeYellow.x, objects.planeYellow.y);
-        ctx.restore();*/
 
+    }
+
+    generateRandomRocks(game) {
+        game.rocks.clear();
+        game.rocksDown.clear();
+
+        game.rocks.base.x = game.width + game.rocks.base.image.width;
+        game.rocks.base.y = game.height - game.rocks.base.image.height;
+        game.rocks.add()
+
+        game.rocksDown.base.x = game.width + game.rocksDown.base.image.width;
+
+        setTimeout(() => {
+            game.rocksDown.base.y = 0 - Random.randomInt(0, game.rocksDown.base.image.height * 0.30);
+            game.rocksDown.add()
+        }, Random.randomInt(1000, 2000));
+
+        this.interval = setInterval(() => {
+            game.rocks.base.y = (game.height - game.rocks.base.image.height) + Random.randomInt(0, game.rocks.base.image.height * 0.20);
+            game.rocks.add()
+
+            setTimeout(() => {
+                game.rocksDown.base.y = 0 - Random.randomInt(0, game.rocksDown.base.image.height * 0.30);
+                game.rocksDown.add();
+            }, Random.randomInt(1000, 2000));
+
+        }, 3000);
     }
 
 }
@@ -238,7 +277,11 @@ class StageGameOver extends Stage {
         this.alpha = 0;
         this.animationEnd = false;
         game.planeYellow.x = game.planeYellow.image.width * -1;
+        game.centerY(game.planeYellow);
+
+
         game.textGameOver.y = 100;
+        game.centerX(game.textGameOver);
 
         Events.addEventListener(Events.clickOnCanvas, e => {
             if (this.animationEnd) this.nextStage = true;
@@ -258,8 +301,7 @@ class StageGameOver extends Stage {
             this.animationEnd = true;
         }
 
-
-        game.drawAndCenterY(game.planeYellow);
+        game.drawObject(game.planeYellow);
 
         if (this.nextStage) {
             if (this.alpha > 0) this.alpha -= 0.04;
@@ -272,8 +314,8 @@ class StageGameOver extends Stage {
         }
 
         game.ctx.globalAlpha = this.alpha;
-        game.drawAndCenterX(game.textGameOver);
-        game.drawAndCenterX(game.tapRight);
+        game.drawObject(game.textGameOver);
+        game.drawObject(game.tapRight);
         game.ctx.globalAlpha = 1;
 
         if (this.canNextStage)

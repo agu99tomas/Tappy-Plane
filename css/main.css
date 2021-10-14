@@ -19,7 +19,7 @@ canvas:active {
 }
 
 .game {
-  background: #e58e26;
+  background: #1abc9c;
   height: 100vh;
 }
 
@@ -34,20 +34,20 @@ canvas:active {
 h2 {
   margin: 0;
   padding: 4rem 0 2rem 0;
-  font-size: 4rem;
+  font-size: 5rem;
   color: #2c3e50;
   font-weight: bold;
 
 }
 
 .nickname {
-    font-size: 1.4rem;
+    font-size: 2rem;
     display: block;
     color: #34495e;
 }
 
 .score{
-    color: #f39c12;
+    color: #ecf0f1;
     font-weight: bold;
     font-size: 2rem;
     background: #34495e;

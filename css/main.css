@@ -3,6 +3,8 @@
 body {
   margin: 0;
   font-family: "Roboto", sans-serif;
+  cursor: url(../resources/tap.png), auto;
+  user-select: none;
 }
 canvas {
   position: absolute;
@@ -12,9 +14,9 @@ canvas {
   box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
     rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
     rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
-  cursor: url(../resources/tap.png), auto;
 }
-canvas:active {
+
+body:active {
   cursor: url(../resources/tapTick.png), auto;
 }
 
@@ -37,22 +39,40 @@ h2 {
   font-size: 5rem;
   color: #2c3e50;
   font-weight: bold;
-
 }
 
 .nickname {
-    font-size: 2rem;
-    display: block;
-    color: #34495e;
+  font-size: 2rem;
+  display: block;
+  color: #34495e;
+  transition: all .2s;
+}
+.nickname:hover{
+    font-weight: bold;
+    transform: scale(1.2) rotate(-2deg);
 }
 
-.score{
-    color: #ecf0f1;
+.nickname:active{
     font-weight: bold;
-    font-size: 2rem;
-    background: #34495e;
-    padding: 0.3rem ;
-    border-radius: 5px;
-    margin-right: 1rem;
-    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    transform: scale(1.1) rotate(-1.5deg);
+}
+
+.nickname:first{
+    transform: scale(1.3) rotate(-3deg) !important;
+}
+
+.score {
+  color: #ecf0f1;
+  font-weight: bold;
+  font-size: 2rem;
+  background: #34495e;
+  padding: 0.3rem;
+  border-radius: 5px;
+  margin-right: 1rem;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  transition: all .2s;
+}
+
+.nickname:hover .score{
+    box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
 }

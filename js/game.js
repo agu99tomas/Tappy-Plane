@@ -39,6 +39,12 @@ class TappyPlaneGame extends Game {
         let gameObjectTapRight = new StaticGameObject('tapRight', 'tapRight.png');
         this.addGameObject(gameObjectTapRight);
 
+        let score = new Score();
+        for (let i = 0; i <= 9; i++) {
+            score.loadImage('number'+i+'.png');            
+        }
+        this.addGameObject(score);
+
         // Game
         let gameImagesPlaneYellow = ['planeYellow1.png', 'planeYellow2.png', 'planeYellow3.png'];
         let gameObjectPlaneYellow = new PlaneYellow('planeYellow', gameImagesPlaneYellow, 2);
@@ -90,6 +96,28 @@ class RocksDownCollection extends CollectionGameObject {
     }
 
 }
+
+
+class Score extends CollectionImage {
+
+    constructor(){
+        super();
+        this.score = 321;
+    }
+
+    getScoreAsImage(){
+        let scoreAsString = this.score.toString().split('');
+        let scoreDigits = scoreAsString.map(Number);
+        let currentScore = [];
+
+        scoreDigits.forEach(i => {
+            currentScore.push(this.images[i]);
+        });
+
+        return currentScore;
+    }
+}
+
 
 class PlaneYellow extends AnimatedGameObject {
     constructor(id, imageFileNames, animationSpeed) {
@@ -199,7 +227,7 @@ class StagePlay extends Stage {
         this.canNextStage = false;
 
         game.planeYellow.drop = -6;
-        
+
 
         Events.addEventListener(Events.clickOnCanvas, e => {
             game.planeYellow.jump();

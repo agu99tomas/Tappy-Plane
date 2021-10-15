@@ -127,6 +127,17 @@ class AnimatedGameObject extends GameObject {
     }
 }
 
+class CollectionImage {
+
+    constructor() {
+        this.images = [];
+    }
+
+    loadImage(imageFileName){
+        let newImage = Resources.loadImage(imageFileName);
+        this.images.push(newImage);
+    }
+}
 
 class CollectionGameObject {
 

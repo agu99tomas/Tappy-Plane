@@ -54,7 +54,7 @@ class GameObject {
 
     draw(game) { }
 
-    collision(gameObject, decreaseHorizontal1, decreaseVertical1, decreaseHorizontal2, decreaseVertical2, game = undefined, helper = false ) {
+    collision(gameObject, decreaseHorizontal1, decreaseVertical1, decreaseHorizontal2, decreaseVertical2, game = undefined, helper = false) {
         // this
         let x1 = this.x + decreaseHorizontal1 / 2;
         let y1 = this.y + decreaseVertical1 / 2;
@@ -129,11 +129,12 @@ class AnimatedGameObject extends GameObject {
 
 class CollectionImage {
 
-    constructor() {
+    constructor(id) {
+        this.id = id;
         this.images = [];
     }
 
-    loadImage(imageFileName){
+    loadImage(imageFileName) {
         let newImage = Resources.loadImage(imageFileName);
         this.images.push(newImage);
     }
@@ -158,7 +159,7 @@ class CollectionGameObject {
 
     remove(gameObject) {
         const index = this.objects.indexOf(gameObject);
-        if (index !== -1) 
+        if (index !== -1)
             this.objects.splice(index, 1);
     }
 
@@ -232,7 +233,7 @@ class Game {
 
     startLoop() {
         setInterval(() => {
-            if(this.onStart){
+            if (this.onStart) {
                 this.stage.start(this);
                 this.onStart = false;
             }
@@ -249,7 +250,7 @@ class Game {
     drawObject(gameObject, x, y) {
         if (typeof gameObject.draw === "function")
             gameObject.draw(this);
-            
+
 
         if (gameObject instanceof AnimatedGameObject) gameObject.animation(this.frame);
 
@@ -257,10 +258,13 @@ class Game {
             this.ctx.drawImage(gameObject.image, gameObject.x, gameObject.y);
         } else {
             if (gameObject.id == 'rock') {
-                console.log(gameObject.id == 'rock')
             }
             this.ctx.drawImage(gameObject.image, x || 0, y);
         }
+    }
+
+    drawImage(image, x, y){
+        this.ctx.drawImage(image, x, y);
     }
 
     drawCollectionGameObject(collectionGameObject) {

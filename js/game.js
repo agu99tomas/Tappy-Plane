@@ -39,7 +39,7 @@ class TappyPlaneGame extends Game {
         let gameObjectTapRight = new StaticGameObject('tapRight', 'tapRight.png');
         this.addGameObject(gameObjectTapRight);
 
-        let score = new Score();
+        let score = new Score('score');
         for (let i = 0; i <= 9; i++) {
             score.loadImage('number'+i+'.png');            
         }
@@ -76,8 +76,10 @@ class RocksCollection extends CollectionGameObject {
         let removeRocks = []
         game.rocks.objects.forEach(rock => {
             rock.x -= 4;
-            if (rock.x + rock.image.width <= 0)
+            if (rock.x + rock.image.width <= 0){
                 removeRocks.push(rock);
+                game.score.score++;
+            }
         });
         game.rocks.removeAll(removeRocks);
     }
@@ -89,10 +91,12 @@ class RocksDownCollection extends CollectionGameObject {
         let removeRocksDown = []
         game.rocksDown.objects.forEach(rockDown => {
             rockDown.x -= 4;
-            if (rockDown.x + rockDown.image.width <= 0)
+            if (rockDown.x + rockDown.image.width <= 0){
                 removeRocksDown.push(rockDown);
+                game.score.score++;
+            }
         });
-        game.rocks.removeAll(removeRocksDown);
+        game.rocksDown.removeAll(removeRocksDown);
     }
 
 }
@@ -100,9 +104,9 @@ class RocksDownCollection extends CollectionGameObject {
 
 class Score extends CollectionImage {
 
-    constructor(){
-        super();
-        this.score = 321;
+    constructor(id){
+        super(id);
+        this.score = 0;
     }
 
     getScoreAsImage(){
@@ -116,6 +120,21 @@ class Score extends CollectionImage {
 
         return currentScore;
     }
+
+    drawScore(game){
+        let scoreImages = this.getScoreAsImage();
+        let totalScoreWidth = scoreImages.reduce((sum, img) => sum + img.width, 0); 
+        let scoreX = (game.width/ 2) - totalScoreWidth / 2;
+
+        scoreImages.forEach(img => {
+            game.drawImage(img, scoreX ,10);
+            scoreX += img.width;
+        });
+
+        
+    }
+
+
 }
 
 
@@ -249,6 +268,8 @@ class StagePlay extends Stage {
         game.drawObject(game.planeYellow);
 
         game.drawAsBackground(game.ground, 4);
+
+        game.score.drawScore(game);
 
         if (game.planeYellow.hasCollision(game)) {
             this.nextStage = true;

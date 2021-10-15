@@ -273,6 +273,7 @@ class StagePlay extends Stage {
         this.nextStage = false;
         this.canNextStage = false;
 
+        game.score.score = 0;
         game.planeYellow.drop = -6;
 
 

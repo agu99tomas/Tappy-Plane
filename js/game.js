@@ -21,11 +21,11 @@ class TappyPlaneGame extends Game {
         let gameObjectGround = new StaticGameObject('ground', 'groundGrass.png');
         this.addGameObject(gameObjectGround);
 
-        let gameObjectRock = new StaticGameObject('rock', 'rockGrass.png');
+        let gameObjectRock = new Rock('rock', 'rockGrass.png');
         let multipleGameObjectRock = new RocksCollection('rocks', gameObjectRock);
         this.addGameObject(multipleGameObjectRock);
 
-        let gameObjectRockDown = new StaticGameObject('rockDown', 'rockGrassDown.png');
+        let gameObjectRockDown = new Rock('rockDown', 'rockGrassDown.png');
         let multipleGameObjectRockDown = new RocksDownCollection('rocksDown', gameObjectRockDown);
         this.addGameObject(multipleGameObjectRockDown);
 
@@ -41,7 +41,7 @@ class TappyPlaneGame extends Game {
 
         let score = new Score('score');
         for (let i = 0; i <= 9; i++) {
-            score.loadImage('number'+i+'.png');            
+            score.loadImage('number' + i + '.png');
         }
         this.addGameObject(score);
 
@@ -76,9 +76,9 @@ class RocksCollection extends CollectionGameObject {
         let removeRocks = []
         game.rocks.objects.forEach(rock => {
             rock.x -= 4;
-            if (rock.x + rock.image.width <= 0){
+            if (rock.x + rock.image.width <= 0) {
                 removeRocks.push(rock);
-                game.score.score++;
+                // game.score.score++;
             }
         });
         game.rocks.removeAll(removeRocks);
@@ -91,9 +91,9 @@ class RocksDownCollection extends CollectionGameObject {
         let removeRocksDown = []
         game.rocksDown.objects.forEach(rockDown => {
             rockDown.x -= 4;
-            if (rockDown.x + rockDown.image.width <= 0){
+            if (rockDown.x + rockDown.image.width <= 0) {
                 removeRocksDown.push(rockDown);
-                game.score.score++;
+                //game.score.score++;
             }
         });
         game.rocksDown.removeAll(removeRocksDown);
@@ -101,15 +101,23 @@ class RocksDownCollection extends CollectionGameObject {
 
 }
 
+class Rock extends StaticGameObject {
+    constructor(id, imageFileName) {
+        super(id, imageFileName);
+        this.scoreCounted = false;
+    }
+}
+
+
 
 class Score extends CollectionImage {
 
-    constructor(id){
+    constructor(id) {
         super(id);
         this.score = 0;
     }
 
-    getScoreAsImage(){
+    getScoreAsImage() {
         let scoreAsString = this.score.toString().split('');
         let scoreDigits = scoreAsString.map(Number);
         let currentScore = [];
@@ -121,17 +129,37 @@ class Score extends CollectionImage {
         return currentScore;
     }
 
-    drawScore(game){
+    drawScore(game) {
         let scoreImages = this.getScoreAsImage();
-        let totalScoreWidth = scoreImages.reduce((sum, img) => sum + img.width, 0); 
-        let scoreX = (game.width/ 2) - totalScoreWidth / 2;
+        let totalScoreWidth = scoreImages.reduce((sum, img) => sum + img.width, 0);
+        let scoreX = (game.width / 2) - totalScoreWidth / 2;
 
         scoreImages.forEach(img => {
-            game.drawImage(img, scoreX ,10);
+            game.drawImage(img, scoreX, 10);
             scoreX += img.width;
         });
 
-        
+        game.rocks.objects.forEach(rock => {
+            let middleX1 = rock.x + rock.image.width / 2;
+            let middleX2 = game.planeYellow.x + game.planeYellow.image.width / 2;
+
+            if (middleX1 <= middleX2 && !rock.scoreCounted) {
+                game.score.score++;
+                rock.scoreCounted = true;
+            }
+
+        });
+
+        game.rocksDown.objects.forEach(rock => {
+            let middleX1 = rock.x + rock.image.width / 2;
+            let middleX2 = game.planeYellow.x + game.planeYellow.image.width / 2;
+
+            if (middleX1 <= middleX2 && !rock.scoreCounted) {
+                game.score.score++;
+                rock.scoreCounted = true;
+            }
+
+        });
     }
 
 

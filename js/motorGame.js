@@ -9,7 +9,7 @@ class Random {
 // Game-wide Events and Resources
 
 class Resources {
-    static resourcesPath = "./resources/";
+    static resourcesPath = "./images/";
     static loadedImages = 0;
     static totalImages = 0;
 
@@ -17,7 +17,7 @@ class Resources {
         Resources.totalImages++;
 
         let image = new Image();
-        image.src = "./resources/" + imageFileName;
+        image.src = Resources.resourcesPath + imageFileName;
         image.onload = e => {
             Resources.loadedImages++;
             Events.dispatchEvent(Events.loadedImage);

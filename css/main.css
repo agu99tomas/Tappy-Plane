@@ -3,7 +3,7 @@
 body {
   margin: 0;
   font-family: "Roboto", sans-serif;
-  cursor: url(../resources/tap.png), auto;
+  cursor: url(../images/tap.png), auto;
   user-select: none;
 }
 canvas {
@@ -17,7 +17,7 @@ canvas {
 }
 
 body:active {
-  cursor: url(../resources/tapTick.png), auto;
+  cursor: url(../images/tapTick.png), auto;
 }
 
 .game {

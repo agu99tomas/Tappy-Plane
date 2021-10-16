@@ -6,7 +6,7 @@ class Random {
 }
 
 class Image2D extends Image {
-    static pathToImage = "./resources/";
+    static pathToImage = "./images/";
     static loadedImages = 0;
     static totalImages = 0;
 

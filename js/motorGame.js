@@ -117,7 +117,7 @@ class AnimatedGameObject extends GameObject {
     }
 
     animation(currentFrame) {
-        if (currentFrame % this.animationSpeed == 1) this.nextImage();
+        if (currentFrame % this.animationSpeed == 0) this.nextImage();
     }
 
     nextImage() {

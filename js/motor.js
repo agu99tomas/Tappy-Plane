@@ -33,13 +33,18 @@ class Object2D extends BaseObject2D {
         this.x = 0;
         this.y = 0;
         this.images = [];
-        this.image = undefined;
+        this.currentImage = undefined;
         this.animationSpeed = animationSpeed;
+    }
+
+    draw(ctx) {
+        ctx.drawImage(thus.currentImage, this.x, this.y);
+        this.playAnimation();
     }
 
     addImage(image2D) {
         this.images.push(image2D);
-        this.image = this.images[0];
+        this.currentImage = this.images[0];
     }
 
     playAnimation(frame) {
@@ -49,9 +54,9 @@ class Object2D extends BaseObject2D {
     }
 
     nextImage() {
-        const currentIndex = this.images.indexOf(this.image);
+        const currentIndex = this.images.indexOf(this.currentImage);
         const nextIndex = (currentIndex + 1) % this.images.length;
-        this.image = this.images[nextIndex];
+        this.currentImage = this.images[nextIndex];
     }
 
     hasCollision() {
@@ -60,17 +65,16 @@ class Object2D extends BaseObject2D {
 
 }
 
-
 class CollectionObject2D extends BaseObject2D {
 
-    constructor(id, baseObject2D = undefined) {
+    constructor(id, object2D = undefined) {
         super(id);
-        this.object2D = baseObject2D;
+        this.object2D = object2D;
         this.objects = [];
     }
 
     duplicate() {
-        let clone = Object.assign({}, this.baseObject2D);
+        let clone = Object.assign({}, this.object2D);
         this.objects.push(clone);
     }
 
@@ -97,11 +101,9 @@ class CollectionObject2D extends BaseObject2D {
 
 }
 
-
-
 class Canvas {
 
-    constructor(id){
+    constructor(id) {
         this.canvas = document.getElementById(id);
         this.ctx = canvas.getContext("2d");
         this.width = this.canvas.width;
@@ -112,22 +114,45 @@ class Canvas {
         this.ctx.clearRect(0, 0, this.width, this.height);
     }
 
-
     draw(baseObject2D) {
         if (typeof baseObject2D === Object2D) {
-            this.drawObject2D(baseObject2D)
+            baseObject2D.draw(this.ctx);
         }
 
         if (typeof baseObject2D === CollectionObject2D) {
             baseObject2D.objects.forEach(object2D => {
-                this.drawObject2D(object2D)
+                object2D.draw(thix.ctx);
             });
         }
 
     }
 
-    drawObject2D(object2D){
-        this.ctx.drawImage(object2D.image, object2D.x, object2D.y);
-        object2D.playAnimation();
+}
+
+
+
+class Layer {
+    loop(canvas) { }
+}
+
+
+class Stage {
+    constructor() {
+        this.layers = [];
+    }
+
+    addLayer(layer) {
+        this.layers.push(layer);
+    }
+
+    drawAllLayers(canvas) {
+        this.layers.forEach(layer => {
+            layer.loop(canvas);
+        });
     }
 }
+
+
+
+
+

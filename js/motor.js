@@ -5,6 +5,20 @@ class Random {
     }
 }
 
+class Events {
+    static loadedImage = new Event("loadedImage");
+    static clickOnCanvas = new Event("clickOnCanvas");
+
+    static dispatchEvent(eventName) {
+        document.dispatchEvent(eventName);
+    }
+
+    static addEventListener(event, callable) {
+        document.addEventListener(event.type, e => callable(e), false);
+    }
+
+}
+
 class Image2D extends Image {
     static pathToImage = "./images/";
     static loadedImages = 0;
@@ -17,6 +31,7 @@ class Image2D extends Image {
         this.src = Image2D.pathToImage + imageFileName;
         this.onload = e => {
             Image2D.loadedImages++;
+            Events.dispatchEvent(Events.loadedImage);
         }
     }
 }
@@ -37,9 +52,9 @@ class Object2D extends BaseObject2D {
         this.animationSpeed = animationSpeed;
     }
 
-    draw(ctx) {
-        ctx.drawImage(thus.currentImage, this.x, this.y);
-        this.playAnimation();
+    draw(canvas) {
+        canvas.ctx.drawImage(thus.currentImage, this.x, this.y);
+        this.playAnimation(canvas.frame);
     }
 
     addImage(image2D) {
@@ -73,6 +88,12 @@ class CollectionObject2D extends BaseObject2D {
         this.objects = [];
     }
 
+    drawAllObjects2D(canvas) {
+        this.objects.forEach(object2D => {
+            object2D.draw(canvas);
+        });
+    }
+
     duplicate() {
         let clone = Object.assign({}, this.object2D);
         this.objects.push(clone);
@@ -103,11 +124,14 @@ class CollectionObject2D extends BaseObject2D {
 
 class Canvas {
 
-    constructor(id) {
-        this.canvas = document.getElementById(id);
-        this.ctx = canvas.getContext("2d");
-        this.width = this.canvas.width;
-        this.height = this.canvas.height;
+    constructor(id, width, height) {
+        this.realCanvas = document.getElementById(id);
+        this.ctx = realCanvas.getContext("2d");
+        this.realCanvas.width = width;
+        this.realCanvas.height = height;
+        this.width = this.realCanvas.width;
+        this.height = this.realCanvas.height;
+        this.frame = 1;
     }
 
     clear() {
@@ -116,28 +140,33 @@ class Canvas {
 
     draw(baseObject2D) {
         if (typeof baseObject2D === Object2D) {
-            baseObject2D.draw(this.ctx);
+            baseObject2D.draw(this);
         }
 
         if (typeof baseObject2D === CollectionObject2D) {
-            baseObject2D.objects.forEach(object2D => {
-                object2D.draw(thix.ctx);
-            });
+            baseObject2D.drawAllObjects2D(this);
         }
+    }
 
+    updateFrame() {
+        if (this.frame == 61) {
+            this.frame = 1;
+        } else {
+            this.frame++;
+        }
     }
 
 }
 
-
-
 class Layer {
     loop(canvas) { }
+    events(e) { }
 }
 
 
 class Stage {
-    constructor() {
+    constructor(id) {
+        this.id = id;
         this.layers = [];
     }
 
@@ -145,14 +174,54 @@ class Stage {
         this.layers.push(layer);
     }
 
-    drawAllLayers(canvas) {
+    drawLayers(canvas) {
         this.layers.forEach(layer => {
             layer.loop(canvas);
         });
     }
+
+    notifyLayersEvent(e){
+
+    }
 }
 
+class Game {
 
+    constructor(canvas) {
+        this.canvas = canvas;
+        this.stage = undefined;
+        this.stages = {};
+    }
 
+    addStage(stage) {
+        this.stages[stage.id] = stage;
+    }
 
+    setStage(id) {
+        this.stage = this.stages[id];
+    }
 
+    addGameObject(gameObject) {
+        Object.defineProperty(this, gameObject.id, {
+            value: gameObject
+        });
+    }
+
+    loop() {
+        const sixtyFPS = 16.66666666666667;
+        setInterval(() => {
+            this.stage.drawLayers(this.canvas);
+            this.canvas.updateFrame();
+        }, sixtyFPS);
+    }
+
+    manageEvents() {
+        this.canvas.realCanvas.onclick = e => { Events.dispatchEvent(Events.clickOnCanvas) };
+        Events.addEventListener(Events.loadedImage, e => this.loading());
+
+        Events.addEventListener(Events.clickOnCanvas, e => {
+            this.stage.notifyLayersEvent(e);
+        });
+    }
+
+}

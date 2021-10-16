@@ -449,13 +449,30 @@
 											"height": 13,
 											"text": "+events(e)",
 											"horizontalAlignment": 0
+										},
+										{
+											"_type": "UMLOperationView",
+											"_id": "AAAAAAF8iRYLhRwS7yI=",
+											"_parent": {
+												"$ref": "AAAAAAF8hGqG2s5r7b0="
+											},
+											"model": {
+												"$ref": "AAAAAAF8iRYLdxwPXto="
+											},
+											"font": "Arial;13;0",
+											"left": 637,
+											"top": 303,
+											"width": 105.85986328125,
+											"height": 13,
+											"text": "+events(e)",
+											"horizontalAlignment": 0
 										}
 									],
 									"font": "Arial;13;0",
 									"left": 632,
 									"top": 283,
 									"width": 115.85986328125,
-									"height": 23
+									"height": 38
 								},
 								{
 									"_type": "UMLReceptionCompartmentView",
@@ -1261,13 +1278,30 @@
 											"height": 13,
 											"text": "+drawAllLayers(canvas)",
 											"horizontalAlignment": 0
+										},
+										{
+											"_type": "UMLOperationView",
+											"_id": "AAAAAAF8iQe1rRsb8VE=",
+											"_parent": {
+												"$ref": "AAAAAAF8hRs65NmpCM8="
+											},
+											"model": {
+												"$ref": "AAAAAAF8iQe1nBsYL70="
+											},
+											"font": "Arial;13;0",
+											"left": 429,
+											"top": 215,
+											"width": 139.08349609375,
+											"height": 13,
+											"text": "+drawAllLayers()",
+											"horizontalAlignment": 0
 										}
 									],
 									"font": "Arial;13;0",
 									"left": 424,
 									"top": 195,
 									"width": 149.08349609375,
-									"height": 23
+									"height": 38
 								},
 								{
 									"_type": "UMLReceptionCompartmentView",
@@ -4744,6 +4778,25 @@
 									"type": ""
 								}
 							]
+						},
+						{
+							"_type": "UMLOperation",
+							"_id": "AAAAAAF8iRYLdxwPXto=",
+							"_parent": {
+								"$ref": "AAAAAAF8hGqG2s5i5gM="
+							},
+							"name": "events",
+							"parameters": [
+								{
+									"_type": "UMLParameter",
+									"_id": "AAAAAAF8iRYWehyOTJ0=",
+									"_parent": {
+										"$ref": "AAAAAAF8iRYLdxwPXto="
+									},
+									"name": "e",
+									"type": ""
+								}
+							]
 						}
 					]
 				},
@@ -5251,6 +5304,14 @@
 									"type": ""
 								}
 							]
+						},
+						{
+							"_type": "UMLOperation",
+							"_id": "AAAAAAF8iQe1nBsYL70=",
+							"_parent": {
+								"$ref": "AAAAAAF8hRs649mg9es="
+							},
+							"name": "drawAllLayers"
 						}
 					]
 				},

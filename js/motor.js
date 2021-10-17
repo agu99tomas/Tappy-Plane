@@ -6,8 +6,9 @@ class Random {
   }
 }
 
-class Events {
+class CustomEvents {
   static loadedImage = new Event("loadedImage");
+  static changeStage = new Event("changeStage");
 
   static dispatchEvent(event, data = undefined) {
     if (data !== undefined) {
@@ -33,7 +34,7 @@ class Image2D extends Image {
     this.src = Image2D.pathToImage + imageFileName;
     this.onload = (e) => {
       Image2D.loadedImages++;
-      Events.dispatchEvent(Events.loadedImage);
+      CustomEvents.dispatchEvent(CustomEvents.loadedImage);
     };
   }
 }
@@ -71,6 +72,10 @@ class Object2D {
     const currentIndex = this.images.indexOf(this.currentImage);
     const nextIndex = (currentIndex + 1) % this.images.length;
     this.currentImage = this.images[nextIndex];
+  }
+  
+  events(e){
+
   }
 
   centerY(canvas) {
@@ -149,24 +154,16 @@ class Canvas {
 }
 
 class Layer {
-  start(canvas) {}
+  start(canvas, objs) {}
 
-  loop(canvas) {}
+  loop(canvas, objs) {}
 
   events(e) {}
 
-  addObjects(objects) {
-    objects.forEach((obj) => {
-      Object.defineProperty(this, obj.id, {
-        value: obj,
-      });
-    });
+  changeStage(id) {
+    CustomEvents.changeStage.data = { id };
+    CustomEvents.dispatchEvent(CustomEvents.changeStage);
   }
-
-  setStage(id){
-    Events.dispatchEvent(Events.changeStage)
-  }
-  
 }
 
 class Background extends Layer {
@@ -178,7 +175,7 @@ class Background extends Layer {
     this.y = y;
   }
 
-  loop(canvas) {
+  loop(canvas, objs) {
     canvas.ctx.drawImage(this.image, this.x, canvas.height - this.image.height);
     canvas.ctx.drawImage(
       this.image,
@@ -203,9 +200,9 @@ class Stage {
     this.layers.push(layer);
   }
 
-  drawLayers(canvas) {
+  drawLayers(canvas, objs) {
     this.layers.forEach((layer) => {
-      layer.loop(canvas);
+      layer.loop(canvas, objs);
     });
   }
 
@@ -221,9 +218,9 @@ class Stage {
     });
   }
 
-  start(canvas) {
+  start(canvas, objs) {
     this.layers.forEach((layer) => {
-      layer.start(canvas);
+      layer.start(canvas, objs);
     });
   }
 }
@@ -233,29 +230,25 @@ class Game {
     this.canvas = canvas;
     this.stage = undefined;
     this.stages = {};
-    this.objects = [];
+    this.objects = {};
     this.stageChanged = true;
   }
 
   addStage(stage) {
     this.stages[stage.id] = stage;
-
-    let objectsClone = Object.assign(this.objects);
-    stage.addObjects(objectsClone);
   }
 
   setStage(id) {
-    let stageClone = Object.assign(this.stages[id]);
-    this.stage = stageClone;
+    this.stage = this.stages[id];
     this.stageChanged = true;
   }
 
   addObject(object) {
-    this.objects.push(object);
+    this.objects[object.id] = object;
   }
 
   start() {
-    Events.addEventListener(Events.loadedImage, (e) => {
+    CustomEvents.addEventListener(CustomEvents.loadedImage, (e) => {
       this.loop();
     });
   }
@@ -267,11 +260,11 @@ class Game {
       const sixtyFPS = 16.66666666666667;
       setInterval(() => {
         if (this.stageChanged) {
-          this.stage.start(this.canvas);
+          this.stage.start(this.canvas, this.objects);
           this.stageChanged = false;
         }
         this.canvas.clear();
-        this.stage.drawLayers(this.canvas);
+        this.stage.drawLayers(this.canvas, this.objects);
         this.canvas.updateFrame();
       }, sixtyFPS);
     } else {
@@ -281,10 +274,22 @@ class Game {
   manageEvents() {
     this.canvas.realCanvas.addEventListener("click", (e) => {
       this.stage.notifyLayersEvent(e);
+      this.notifyObjectsEvent(e);
     });
 
     document.addEventListener("keydown", (e) => {
       this.stage.notifyLayersEvent(e);
+    });
+
+    CustomEvents.addEventListener(CustomEvents.changeStage, (e) => {
+      this.setStage(e.data.id);
+    });
+  }
+
+  notifyObjectsEvent(e){
+    let arrayObjects = Object.entries(this.objects);
+    arrayObjects.forEach(obj => {
+      obj[1].events(e);
     });
   }
 }

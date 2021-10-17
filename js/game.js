@@ -20,16 +20,27 @@ window.onload = () => {
     collectionScore.addImage("number" + i + ".png");
   }
 
-  let collectionAlphabet = new CollectionAlphabet('alphabet');
-  collectionAlphabet.addImages(...collectionAlphabet.fileNames);
+  let writer = new Writer('writer');
+  writer.loadImages();
   
+  let medalBronze = new Object2D("medalBronze");
+  medalBronze.addImage("medalBronze.png");
+
+  let medalSilver = new Object2D("medalSilver");
+  medalSilver.addImage("medalSilver.png");
+
+  let medalGold = new Object2D("medalGold");
+  medalGold.addImage("medalGold.png");
 
   game.addObject(objPlane);
   game.addObject(objTapRight);
   game.addObject(objCup);
   game.addObject(objtextGetReady);
   game.addObject(collectionScore);
-  game.addObject(collectionAlphabet);
+  game.addObject(writer);
+  game.addObject(medalSilver);
+  game.addObject(medalBronze);
+  game.addObject(medalGold);
 
   //// Layers ////
   let layerBackground = new Background("background.png", 1);
@@ -38,6 +49,7 @@ window.onload = () => {
   let layerPlay = new LayerPlay();
   let layerMenu = new LayerMenu();
   let layerAskName = new LayerAskName();
+  let layerLeaderboard = new LayerLeaderboard();
 
   //// Stages ////
   let stageReady = new Stage("getReady");
@@ -56,7 +68,13 @@ window.onload = () => {
   stageAskName.addLayer(layerGroundGrass);
   stageAskName.addLayer(layerAskName);
 
+  let stageLeaderboard = new Stage("leaderBoard");
+  stageLeaderboard.addLayer(layerBackground);
+  stageLeaderboard.addLayer(layerGroundGrass);
+  stageLeaderboard.addLayer(layerLeaderboard);
+
   game.addStage(stageAskName);
+  game.addStage(stageLeaderboard);
   game.addStage(stageReady);
   game.addStage(stagePlay);
   game.start();

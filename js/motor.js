@@ -44,14 +44,35 @@ class Object2D {
     this.id = id;
     this.x = 0;
     this.y = 0;
+    this.degrees = 0;
     this.images = [];
     this.currentImage = undefined;
     this.animationSpeed = animationSpeed;
   }
 
   draw(canvas) {
-    canvas.ctx.drawImage(this.currentImage, this.x, this.y);
-    this.playAnimation(canvas.frame);
+    if (this.degrees !== 0) {
+      this.drawRotated(canvas);
+    } else {
+      canvas.ctx.drawImage(this.currentImage, this.x, this.y);
+      this.playAnimation(canvas.frame);
+    }
+  }
+
+  drawRotated(canvas) {
+    canvas.ctx.save();
+    canvas.ctx.translate(
+      this.x + this.currentImage.width / 2,
+      this.y + this.currentImage.height / 2
+    );
+    canvas.ctx.rotate((this.degrees * Math.PI) / 180);
+
+    canvas.ctx.drawImage(
+      this.currentImage,
+      -this.currentImage.width / 2,
+      -this.currentImage.width / 2
+    );
+    canvas.ctx.restore();
   }
 
   addImage(fileName) {
@@ -62,8 +83,8 @@ class Object2D {
     }
   }
 
-  addImages(...fileNames){
-    fileNames.forEach(fileName => {
+  addImages(...fileNames) {
+    fileNames.forEach((fileName) => {
       this.addImage(fileName);
     });
   }
@@ -100,7 +121,7 @@ class SingleCollection {
     this.objects = [];
   }
 
-  draw(canvas, objs) {
+  draw(canvas) {
     this.objects.forEach((obj) => {
       obj.draw(canvas);
     });
@@ -129,18 +150,22 @@ class SingleCollection {
 }
 
 class CollectionImage {
-
   constructor(id) {
-      this.id = id;
-      this.images = [];
+    this.id = id;
+    this.images = [];
   }
 
-  draw(canvas) {
-  }
+  draw(canvas) {}
 
   addImage(fileName) {
-      let newImage = new Image2D(fileName);
-      this.images.push(newImage);
+    let newImage = new Image2D(fileName);
+    this.images.push(newImage);
+  }
+
+  addImages(...fileNames) {
+    fileNames.forEach((fileName) => {
+      this.addImage(fileName);
+    });
   }
 
   events(e) {}

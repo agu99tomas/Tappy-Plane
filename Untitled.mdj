@@ -150,7 +150,7 @@
 											"top": 384,
 											"width": 127.54345703125,
 											"height": 13,
-											"text": "+registerStage(Stage)",
+											"text": "+addStage(Stage)",
 											"horizontalAlignment": 0
 										},
 										{
@@ -197,6 +197,7 @@
 											"model": {
 												"$ref": "AAAAAAF8hRU+ENbeB8s="
 											},
+											"visible": false,
 											"font": "Arial;13;0",
 											"left": 157,
 											"top": 414,
@@ -216,10 +217,27 @@
 											},
 											"font": "Arial;13;0",
 											"left": 157,
-											"top": 429,
+											"top": 414,
 											"width": 127.54345703125,
 											"height": 13,
 											"text": "+loop()",
+											"horizontalAlignment": 0
+										},
+										{
+											"_type": "UMLOperationView",
+											"_id": "AAAAAAF8ihmbqCHLBWU=",
+											"_parent": {
+												"$ref": "AAAAAAF8hGpOxM4+NbQ="
+											},
+											"model": {
+												"$ref": "AAAAAAF8ihmboiHI6nI="
+											},
+											"font": "Arial;13;0",
+											"left": 157,
+											"top": 429,
+											"width": 127.54345703125,
+											"height": 13,
+											"text": "+dispachEvents()",
 											"horizontalAlignment": 0
 										}
 									],
@@ -1029,13 +1047,30 @@
 											"height": 13,
 											"text": "+drawObject2D()",
 											"horizontalAlignment": 0
+										},
+										{
+											"_type": "UMLOperationView",
+											"_id": "AAAAAAF8igxhcB+zbJI=",
+											"_parent": {
+												"$ref": "AAAAAAF8hLHydNJII6w="
+											},
+											"model": {
+												"$ref": "AAAAAAF8igxhYR+waSg="
+											},
+											"font": "Arial;13;0",
+											"left": 149,
+											"top": 238,
+											"width": 167,
+											"height": 13,
+											"text": "+updateFrame()",
+											"horizontalAlignment": 0
 										}
 									],
 									"font": "Arial;13;0",
 									"left": 144,
 									"top": 203,
 									"width": 177,
-									"height": 38
+									"height": 53
 								},
 								{
 									"_type": "UMLReceptionCompartmentView",
@@ -1293,7 +1328,7 @@
 											"top": 215,
 											"width": 139.08349609375,
 											"height": 13,
-											"text": "+drawAllLayers()",
+											"text": "+drawLayers()",
 											"horizontalAlignment": 0
 										}
 									],
@@ -3120,13 +3155,30 @@
 											"height": 13,
 											"text": "+removeFromList()",
 											"horizontalAlignment": 0
+										},
+										{
+											"_type": "UMLOperationView",
+											"_id": "AAAAAAF8iYvB+h4caog=",
+											"_parent": {
+												"$ref": "AAAAAAF8hlKdGerCjqo="
+											},
+											"model": {
+												"$ref": "AAAAAAF8iYvB6x4QMO4="
+											},
+											"font": "Arial;13;0",
+											"left": 253,
+											"top": 755,
+											"width": 143.43798828125,
+											"height": 13,
+											"text": "+drawAllObjects2D()",
+											"horizontalAlignment": 0
 										}
 									],
 									"font": "Arial;13;0",
 									"left": 248,
 									"top": 675,
 									"width": 153.43798828125,
-									"height": 83
+									"height": 98
 								},
 								{
 									"_type": "UMLReceptionCompartmentView",
@@ -4600,7 +4652,7 @@
 							"_parent": {
 								"$ref": "AAAAAAF8hGpOws41WXI="
 							},
-							"name": "registerStage",
+							"name": "addStage",
 							"parameters": [
 								{
 									"_type": "UMLParameter",
@@ -4608,8 +4660,7 @@
 									"_parent": {
 										"$ref": "AAAAAAF8hNuAr9UToyo="
 									},
-									"name": "Stage",
-									"type": ""
+									"name": "Stage"
 								}
 							]
 						},
@@ -4655,6 +4706,14 @@
 								"$ref": "AAAAAAF8hGpOws41WXI="
 							},
 							"name": "loop"
+						},
+						{
+							"_type": "UMLOperation",
+							"_id": "AAAAAAF8ihmboiHI6nI=",
+							"_parent": {
+								"$ref": "AAAAAAF8hGpOws41WXI="
+							},
+							"name": "dispachEvents"
 						}
 					]
 				},
@@ -5192,6 +5251,14 @@
 								"$ref": "AAAAAAF8hLHyc9I/IrY="
 							},
 							"name": "drawObject2D"
+						},
+						{
+							"_type": "UMLOperation",
+							"_id": "AAAAAAF8igxhYR+waSg=",
+							"_parent": {
+								"$ref": "AAAAAAF8hLHyc9I/IrY="
+							},
+							"name": "updateFrame"
 						}
 					]
 				},
@@ -5311,7 +5378,7 @@
 							"_parent": {
 								"$ref": "AAAAAAF8hRs649mg9es="
 							},
-							"name": "drawAllLayers"
+							"name": "drawLayers"
 						}
 					]
 				},
@@ -5531,6 +5598,14 @@
 								"$ref": "AAAAAAF8hlKdGOq5Pmk="
 							},
 							"name": "removeFromList"
+						},
+						{
+							"_type": "UMLOperation",
+							"_id": "AAAAAAF8iYvB6x4QMO4=",
+							"_parent": {
+								"$ref": "AAAAAAF8hlKdGOq5Pmk="
+							},
+							"name": "drawAllObjects2D"
 						}
 					]
 				},

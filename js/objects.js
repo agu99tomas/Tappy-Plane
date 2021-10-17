@@ -39,7 +39,7 @@ class ObjectPlane extends Object2D {
 
   lostAndGoLeft() {
     this.x -= 4;
-    this.disappeared = this.currentImage.width + this.x < 0;
+    this.disappeared = this.width + this.x < 0;
   }
 }
 

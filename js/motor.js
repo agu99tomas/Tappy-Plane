@@ -44,6 +44,8 @@ class Object2D {
     this.id = id;
     this.x = 0;
     this.y = 0;
+    this.width = 0;
+    this.height = 0;
     this.degrees = 0;
     this.images = [];
     this.currentImage = undefined;
@@ -60,20 +62,9 @@ class Object2D {
     }
   }
 
-  drawRotated(canvas) {
-    canvas.ctx.save();
-    canvas.ctx.translate(
-      this.x + this.currentImage.width / 2,
-      this.y + this.currentImage.height / 2
-    );
-    canvas.ctx.rotate((this.degrees * Math.PI) / 180);
-
-    canvas.ctx.drawImage(
-      this.currentImage,
-      -this.currentImage.width / 2,
-      -this.currentImage.width / 2
-    );
-    canvas.ctx.restore();
+  updateSizes(){
+    this.height = this.currentImage.height;
+    this.width = this.currentImage.width;
   }
 
   addImage(fileName) {
@@ -81,6 +72,9 @@ class Object2D {
     this.images.push(newImage);
     if (this.currentImage === undefined) {
       this.currentImage = newImage;
+      this.currentImage.addEventListener('load', e =>  {
+        this.updateSizes();
+      })
     }
   }
 
@@ -100,21 +94,22 @@ class Object2D {
     const currentIndex = this.images.indexOf(this.currentImage);
     const nextIndex = (currentIndex + 1) % this.images.length;
     this.currentImage = this.images[nextIndex];
+    this.updateSizes();
   }
 
   events(e) {}
 
   centerY(canvas) {
-    this.y = canvas.height / 2 - this.currentImage.height / 2;
+    this.y = canvas.height / 2 - this.height / 2;
   }
 
   centerX(canvas) {
-    this.x = canvas.width / 2 - this.currentImage.width / 2;
+    this.x = canvas.width / 2 - this.width / 2;
   }
 
   clicked(x2, y2) {
-    let height = this.currentImage.height;
-    let width = this.currentImage.width;
+    let height = this.height;
+    let width = this.width;
     if (
       y2 > this.y &&
       y2 < this.y + height &&

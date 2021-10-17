@@ -43,7 +43,7 @@ class LayerReady extends Layer {
 class LayerMenu extends Layer {
   start(canvas, objs) {
     objs.cup.y = 10;
-    objs.cup.x = canvas.width - objs.cup.currentImage.width - 15;
+    objs.cup.x = canvas.width - objs.cup.width - 15;
   }
   loop(canvas, objs) {
     canvas.draw(objs.cup);
@@ -93,13 +93,13 @@ class LayerLeaderboard extends Layer {
     objs.tap.centerX(canvas);
     objs.tap.y = 400;
 
-    objs.medalGold.y = 150 - objs.medalGold.currentImage.height;
+    objs.medalGold.y = 150 - objs.medalGold.height;
     objs.medalGold.x = 120;
 
-    objs.medalSilver.y = 250 - objs.medalSilver.currentImage.height;
+    objs.medalSilver.y = 250 - objs.medalSilver.height;
     objs.medalSilver.x = 120;
 
-    objs.medalBronze.y = 350 - objs.medalBronze.currentImage.height;
+    objs.medalBronze.y = 350 - objs.medalBronze.height;
     objs.medalBronze.x = 120;
 
     this.firstPosition = new Paragraph("193 tomas", 30, 150);

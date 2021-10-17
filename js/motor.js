@@ -54,12 +54,18 @@ class Object2D {
     this.playAnimation(canvas.frame);
   }
 
-  addImage(imageFileName) {
-    let newImage = new Image2D(imageFileName);
+  addImage(fileName) {
+    let newImage = new Image2D(fileName);
     this.images.push(newImage);
     if (this.currentImage === undefined) {
       this.currentImage = newImage;
     }
+  }
+
+  addImages(...fileNames){
+    fileNames.forEach(fileName => {
+      this.addImage(fileName);
+    });
   }
 
   playAnimation(frame) {
@@ -73,10 +79,8 @@ class Object2D {
     const nextIndex = (currentIndex + 1) % this.images.length;
     this.currentImage = this.images[nextIndex];
   }
-  
-  events(e){
 
-  }
+  events(e) {}
 
   centerY(canvas) {
     this.y = canvas.height / 2 - this.currentImage.height / 2;
@@ -89,33 +93,32 @@ class Object2D {
   hasCollision() {}
 }
 
-class Collection {
-  constructor(id, object) {
+class SingleCollection {
+  constructor(id, imageFileName) {
     this.id = id;
-    this.object = object;
+    this.image = new Image2D(imageFileName);
     this.objects = [];
   }
 
-  draw(canvas) {
+  draw(canvas, objs) {
     this.objects.forEach((obj) => {
       obj.draw(canvas);
     });
   }
 
-  addObject() {
-    let clone = Object.assign(this.object);
-    this.objects.push(clone);
+  generateNewObject() {
+    let newObject = new Object2D(this.objects.length);
+    newObject.addImage(this.image);
+    this.objects.push(newObject);
   }
 
-  clearObjects() {
+  deleteObjects() {
     this.objects = [];
   }
 
-  remove(gameObject) {
+  removeObject(gameObject) {
     const index = this.objects.indexOf(gameObject);
-    if (index !== -1) {
-      this.objects.splice(index, 1);
-    }
+    this.objects.splice(index, 1);
   }
 
   removeFromList(objects) {
@@ -123,6 +126,24 @@ class Collection {
       this.remove(obj);
     });
   }
+}
+
+class CollectionImage {
+
+  constructor(id) {
+      this.id = id;
+      this.images = [];
+  }
+
+  draw(canvas) {
+  }
+
+  addImage(fileName) {
+      let newImage = new Image2D(fileName);
+      this.images.push(newImage);
+  }
+
+  events(e) {}
 }
 
 class Canvas {
@@ -142,6 +163,10 @@ class Canvas {
 
   draw(object) {
     object.draw(this);
+  }
+
+  drawImage(image, x, y) {
+    this.ctx.drawImage(image, x, y);
   }
 
   updateFrame() {
@@ -231,11 +256,14 @@ class Game {
     this.stage = undefined;
     this.stages = {};
     this.objects = {};
-    this.stageChanged = true;
+    this.stageChanged = false;
   }
 
   addStage(stage) {
     this.stages[stage.id] = stage;
+    if (this.stage === undefined) {
+      this.setStage(stage.id);
+    }
   }
 
   setStage(id) {
@@ -286,9 +314,9 @@ class Game {
     });
   }
 
-  notifyObjectsEvent(e){
+  notifyObjectsEvent(e) {
     let arrayObjects = Object.entries(this.objects);
-    arrayObjects.forEach(obj => {
+    arrayObjects.forEach((obj) => {
       obj[1].events(e);
     });
   }

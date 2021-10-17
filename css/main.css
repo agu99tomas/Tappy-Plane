@@ -1,5 +1,4 @@
 body {
-  margin: 0;
   cursor: url(../images/tap.png), auto;
   background: #636e72;
 }
@@ -13,5 +12,4 @@ canvas {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-
 }

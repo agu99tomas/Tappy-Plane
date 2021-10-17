@@ -118,6 +118,10 @@ class Writer extends CollectionImage {
     this.numberImages = [];
   }
 
+  removeParagraphs(){
+    this.paragraphs = [];
+  }
+
   addAlphabetImages() {
     this.fileNames.forEach((fileName) => {
       let newImage = new Image2D(fileName);

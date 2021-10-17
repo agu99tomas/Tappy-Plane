@@ -48,6 +48,7 @@ class Object2D {
     this.images = [];
     this.currentImage = undefined;
     this.animationSpeed = animationSpeed;
+    this.visible = true;
   }
 
   draw(canvas) {
@@ -109,6 +110,20 @@ class Object2D {
 
   centerX(canvas) {
     this.x = canvas.width / 2 - this.currentImage.width / 2;
+  }
+
+  clicked(x2, y2) {
+    let height = this.currentImage.height;
+    let width = this.currentImage.width;
+    if (
+      y2 > this.y &&
+      y2 < this.y + height &&
+      x2 > this.x &&
+      x2 < this.x + width
+    ) {
+      return true;
+    }
+    return false;
   }
 
   hasCollision() {}
@@ -194,6 +209,13 @@ class Canvas {
     this.ctx.drawImage(image, x, y);
   }
 
+  getCursorPosition(event) {
+    const rect = this.realCanvas.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    return { x, y };
+  }
+
   updateFrame() {
     if (this.frame == 60) {
       this.frame = 1;
@@ -208,7 +230,7 @@ class Layer {
 
   loop(canvas, objs) {}
 
-  events(e) {}
+  events(e, canvas, objects) {}
 
   changeStage(id) {
     CustomEvents.changeStage.data = { id };
@@ -256,9 +278,9 @@ class Stage {
     });
   }
 
-  notifyLayersEvent(e) {
+  notifyLayersEvent(e, canvas, objects) {
     this.layers.forEach((layer) => {
-      layer.events(e);
+      layer.events(e, canvas, objects);
     });
   }
 
@@ -326,12 +348,12 @@ class Game {
 
   manageEvents() {
     this.canvas.realCanvas.addEventListener("click", (e) => {
-      this.stage.notifyLayersEvent(e);
+      this.stage.notifyLayersEvent(e, this.canvas, this.objects);
       this.notifyObjectsEvent(e);
     });
 
     document.addEventListener("keydown", (e) => {
-      this.stage.notifyLayersEvent(e);
+      this.stage.notifyLayersEvent(e, this.canvas, this.objects);
     });
 
     CustomEvents.addEventListener(CustomEvents.changeStage, (e) => {

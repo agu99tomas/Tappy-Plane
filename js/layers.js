@@ -11,12 +11,8 @@ class LayerPlay extends Layer {
 
 class LayerReady extends Layer {
   start(canvas, objs) {
-    this.nextStage = false;
-    this.canNextStage = false;
-    this.alpha = 1;
 
     objs.tap.centerX(canvas);
-    //bjs.tap.y = 300;
 
     objs.plane.centerY(canvas);
     objs.plane.x = 100;
@@ -27,34 +23,19 @@ class LayerReady extends Layer {
 
   loop(canvas, objs) {
     canvas.draw(objs.plane);
-    if (this.nextStage) {
-      this.fade(canvas);
-    }
     canvas.draw(objs.tap);
     canvas.draw(objs.textGetReady);
-    canvas.ctx.globalAlpha = 1.0;
-
-    if (this.canNextStage) {
-      this.changeStage("play");
-    }
   }
 
-  fade(canvas) {
-    if (this.alpha > 0) {
-      this.alpha -= 0.04;
-    }
-
-    if (this.alpha < 0) {
-      this.alpha = 0;
-      this.canNextStage = true;
-    }
-
-    canvas.ctx.globalAlpha = this.alpha;
-  }
-
-  events(e) {
+  events(e, canvas, objs) {
     if (e.type == "click") {
-      this.nextStage = true;
+      let position = canvas.getCursorPosition(e);
+      let cupClicked = objs.cup.clicked(position.x, position.y)
+      if (cupClicked) {
+        this.changeStage("leaderBoard");
+      }else{
+        this.changeStage("play");
+      }
     }
   }
 }
@@ -71,16 +52,11 @@ class LayerMenu extends Layer {
 
 class LayerAskName extends Layer {
   start(canvas, objs) {
-    this.nextStage = false;
-    this.canNextStage = false;
-    this.alpha = 1;
-
-    objs.cup.y = 10;
-    objs.cup.x = canvas.width - objs.cup.currentImage.width - 15;
-
+    objs.writer.removeParagraphs();
+    
     objs.tap.centerX(canvas);
     objs.tap.y = 400;
-    this.tapVisible = false;
+    objs.tap.visible = false; 
 
     this.askName = new Paragraph("Write your name", 0, 150);
     objs.writer.appendParagraph(this.askName);
@@ -90,59 +66,33 @@ class LayerAskName extends Layer {
     objs.writer.appendParagraph(this.playerName);
   }
   loop(canvas, objs) {
-    if (this.tapVisible) {
+    if (objs.tap.visible) {
       canvas.draw(objs.tap);
     }
-    if (this.nextStage) {
-      this.fade(canvas);
-    }
     canvas.draw(objs.writer);
-    canvas.ctx.globalAlpha = 1.0;
-    if (this.canNextStage) {
-      objs.plane.playerName = this.playerName.text;
-      this.changeStage("getReady");
-    }
   }
 
-  fade(canvas) {
-    if (this.alpha > 0) {
-      this.alpha -= 0.04;
-    }
-
-    if (this.alpha < 0) {
-      this.alpha = 0;
-      this.canNextStage = true;
-    }
-
-    canvas.ctx.globalAlpha = this.alpha;
-  }
-
-  events(e) {
+  events(e, canvas, objs) {
     if (e.type == "keydown") {
       this.playerName.appendLetter(e.key);
-      if (this.playerName.text.length >= 1) {
-        this.tapVisible = true;
-      } else {
-        this.tapVisible = false;
-      }
+      objs.tap.visible = this.playerName.text.length >= 1;
     }
     if (e.type == "click") {
-      if (this.tapVisible) {
-        this.nextStage = true;
+      if (objs.tap.visible) {
+        objs.plane.playerName = this.playerName.text;
+        this.changeStage("getReady");
       }
     }
   }
 }
 
 class LayerLeaderboard extends Layer {
-  start(canvas, objs){
-    this.nextStage = false;
-    this.canNextStage = false;
-    this.alpha = 1;
+  start(canvas, objs) {
+    objs.writer.removeParagraphs();
 
     objs.tap.centerX(canvas);
     objs.tap.y = 400;
-    
+
     objs.medalGold.y = 150 - objs.medalGold.currentImage.height;
     objs.medalGold.x = 120;
 
@@ -156,44 +106,23 @@ class LayerLeaderboard extends Layer {
     this.secondPosition = new Paragraph("90 franc", 30, 250);
     this.thirdPosition = new Paragraph("9 vader", 30, 350);
 
-
     objs.writer.appendParagraph(this.firstPosition);
     objs.writer.appendParagraph(this.secondPosition);
     objs.writer.appendParagraph(this.thirdPosition);
   }
 
-  fade(canvas) {
-    if (this.alpha > 0) {
-      this.alpha -= 0.04;
-    }
 
-    if (this.alpha < 0) {
-      this.alpha = 0;
-      this.canNextStage = true;
-    }
-
-    canvas.ctx.globalAlpha = this.alpha;
-  }
-
-  loop(canvas, objs){
+  loop(canvas, objs) {
     canvas.draw(objs.tap);
-    if (this.nextStage) {
-      this.fade(canvas);
-    }
     canvas.draw(objs.writer);
     canvas.draw(objs.medalGold);
     canvas.draw(objs.medalBronze);
     canvas.draw(objs.medalSilver);
-
-    canvas.ctx.globalAlpha = 1.0;
-    if (this.canNextStage) {
-      this.changeStage("getReady");
-    }
   }
 
-  events(e) {
+  events(e, canvas, objs) {
     if (e.type == "click") {
-      this.nextStage = true;
+      this.changeStage("getReady");
     }
   }
 }

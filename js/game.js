@@ -22,15 +22,6 @@ window.onload = () => {
 
   let writer = new Writer('writer');
   writer.loadImages();
-  
-  let medalBronze = new Object2D("medalBronze");
-  medalBronze.addImage("medalBronze.png");
-
-  let medalSilver = new Object2D("medalSilver");
-  medalSilver.addImage("medalSilver.png");
-
-  let medalGold = new Object2D("medalGold");
-  medalGold.addImage("medalGold.png");
 
   game.addObject(objPlane);
   game.addObject(objTapRight);
@@ -38,9 +29,6 @@ window.onload = () => {
   game.addObject(objtextGetReady);
   game.addObject(collectionScore);
   game.addObject(writer);
-  game.addObject(medalSilver);
-  game.addObject(medalBronze);
-  game.addObject(medalGold);
 
   //// Layers ////
   let layerBackground = new Background("background.png", 1);

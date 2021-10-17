@@ -11,9 +11,6 @@ class LayerPlay extends Layer {
 
 class LayerReady extends Layer {
   start(canvas, objs) {
-
-    objs.tap.centerX(canvas);
-
     objs.plane.centerY(canvas);
     objs.plane.x = 100;
 
@@ -90,21 +87,9 @@ class LayerLeaderboard extends Layer {
   start(canvas, objs) {
     objs.writer.removeParagraphs();
 
-    objs.tap.centerX(canvas);
-    objs.tap.y = 400;
-
-    objs.medalGold.y = 150 - objs.medalGold.height;
-    objs.medalGold.x = 120;
-
-    objs.medalSilver.y = 250 - objs.medalSilver.height;
-    objs.medalSilver.x = 120;
-
-    objs.medalBronze.y = 350 - objs.medalBronze.height;
-    objs.medalBronze.x = 120;
-
-    this.firstPosition = new Paragraph("193 tomas", 30, 150);
-    this.secondPosition = new Paragraph("90 franc", 30, 250);
-    this.thirdPosition = new Paragraph("9 vader", 30, 350);
+    this.firstPosition = new Paragraph("193 tomas", 0, 150);
+    this.secondPosition = new Paragraph("90 franc", 0, 250);
+    this.thirdPosition = new Paragraph("9 vader", 0, 350);
 
     objs.writer.appendParagraph(this.firstPosition);
     objs.writer.appendParagraph(this.secondPosition);
@@ -115,9 +100,6 @@ class LayerLeaderboard extends Layer {
   loop(canvas, objs) {
     canvas.draw(objs.tap);
     canvas.draw(objs.writer);
-    canvas.draw(objs.medalGold);
-    canvas.draw(objs.medalBronze);
-    canvas.draw(objs.medalSilver);
   }
 
   events(e, canvas, objs) {

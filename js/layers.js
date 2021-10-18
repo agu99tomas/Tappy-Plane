@@ -87,9 +87,12 @@ class LayerLeaderboard extends Layer {
   start(canvas, objs) {
     objs.writer.removeParagraphs();
 
-    this.firstPosition = new Paragraph("193 tomas", 0, 150);
-    this.secondPosition = new Paragraph("90 franc", 0, 250);
-    this.thirdPosition = new Paragraph("9 vader", 0, 350);
+    let scores = JSON.parse(localStorage.getItem("scores") || "[]");
+    console.log(scores[0])
+
+    this.firstPosition = new Paragraph(`${scores[0].score} ${scores[0].name}`, 0, 150);
+    this.secondPosition = new Paragraph(`${scores[1].score} ${scores[1].name}`, 0, 250);
+    this.thirdPosition = new Paragraph(`${scores[2].score} ${scores[2].name}`, 0, 350);
 
     objs.writer.appendParagraph(this.firstPosition);
     objs.writer.appendParagraph(this.secondPosition);

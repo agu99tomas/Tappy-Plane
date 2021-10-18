@@ -66,4 +66,16 @@ window.onload = () => {
   game.addStage(stageReady);
   game.addStage(stagePlay);
   game.start();
+
+  /* 
+  
+  */
+ 
+  let fakeScores = [
+    {name: 'JOJO', score : '193'},
+    {name: 'VADER', score : '57'},
+    {name: 'FRANK', score : '9'}
+  ]
+  localStorage.setItem("scores",  JSON.stringify(fakeScores));
+  
 };

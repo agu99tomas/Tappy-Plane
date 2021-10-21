@@ -14,11 +14,11 @@ class LayerPlay extends Layer {
   loop(canvas, objs) {
     this.textCore.text = this.score;
     canvas.draw(objs.plane);
-    canvas.draw(objs.writer);
     this.rocks.forEach((rock) => {
       canvas.drawImage(rock.currentImage, rock.x, rock.y);
     });
     this.moveRocks();
+    canvas.draw(objs.writer);
   }
 
   moveRocks() {

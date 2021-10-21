@@ -155,6 +155,7 @@ class Writer extends CollectionImage {
   }
 
   getTextAsImage(text) {
+    text = text.toString();
     let letters = text.split(""); // ['w', 'r', 'i', 't', 'e', ' ', 'y', 'o', 'u', 'r', ' ', 'n', 'a', 'm', 'e']
     let textAsImage = letters.map((l) => {
       if (isFinite(l)) {

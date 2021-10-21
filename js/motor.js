@@ -27,9 +27,10 @@ class Image2D extends Image {
   static loadedImages = 0;
   static totalImages = 0;
 
-  constructor(imageFileName) {
+  constructor(imageFileName, id = undefined) {
     super();
     Image2D.totalImages++;
+    this.id = id;
 
     this.src = Image2D.pathToImage + imageFileName;
     this.onload = (e) => {
@@ -46,7 +47,6 @@ class Object2D {
     this.y = 0;
     this.width = 0;
     this.height = 0;
-    this.degrees = 0;
     this.images = [];
     this.currentImage = undefined;
     this.animationSpeed = animationSpeed;
@@ -54,12 +54,8 @@ class Object2D {
   }
 
   draw(canvas) {
-    if (this.degrees !== 0) {
-      this.drawRotated(canvas);
-    } else {
       canvas.ctx.drawImage(this.currentImage, this.x, this.y);
       this.playAnimation(canvas.frame);
-    }
   }
 
   updateSizes(){
@@ -122,41 +118,6 @@ class Object2D {
   }
 
   hasCollision() {}
-}
-
-class SingleCollection {
-  constructor(id, imageFileName) {
-    this.id = id;
-    this.image = new Image2D(imageFileName);
-    this.objects = [];
-  }
-
-  draw(canvas) {
-    this.objects.forEach((obj) => {
-      obj.draw(canvas);
-    });
-  }
-
-  generateNewObject() {
-    let newObject = new Object2D(this.objects.length);
-    newObject.addImage(this.image);
-    this.objects.push(newObject);
-  }
-
-  deleteObjects() {
-    this.objects = [];
-  }
-
-  removeObject(gameObject) {
-    const index = this.objects.indexOf(gameObject);
-    this.objects.splice(index, 1);
-  }
-
-  removeFromList(objects) {
-    objects.forEach((obj) => {
-      this.remove(obj);
-    });
-  }
 }
 
 class CollectionImage {

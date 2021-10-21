@@ -1,11 +1,58 @@
 class LayerPlay extends Layer {
   start(canvas, objs) {
+    this.score = 0;
+    objs.writer.removeParagraphs();
+    this.textCore = new Paragraph(this.score, 0, 90);
+    objs.writer.appendParagraph(this.textCore);
+
+    this.rocks = [];
+    this.generateRandomRocks(objs);
+
     objs.plane.gameStart = true;
   }
 
   loop(canvas, objs) {
+    this.textCore.text = this.score;
     canvas.draw(objs.plane);
-    canvas.draw(objs.score);
+    canvas.draw(objs.writer);
+    this.rocks.forEach((rock) => {
+      canvas.drawImage(rock.currentImage, rock.x, rock.y);
+    });
+    this.moveRocks();
+  }
+
+  moveRocks() {
+    this.rocks = this.rocks.filter((r) => {
+      r.x -= 4;
+      return r.x + r.width > 0;
+    });
+  }
+
+  newRock(objs) {
+    let cloneRock = Object.assign({}, objs.rock);
+    cloneRock.x = canvas.width + cloneRock.width;
+    cloneRock.y =
+      canvas.height -
+      cloneRock.height +
+      Random.randomInt(0, cloneRock.height * 0.3);
+    this.rocks.push(cloneRock);
+  }
+
+  newRockDown(objs) {
+    let cloneRockDown = Object.assign({}, objs.rockDown);
+    cloneRockDown.x = canvas.width + cloneRockDown.width;
+    cloneRockDown.y = 0 - Random.randomInt(0, cloneRockDown.height * 0.3);
+    this.rocks.push(cloneRockDown);
+  }
+
+  generateRandomRocks(objs) {
+    setTimeout(() => {
+      this.newRock(objs);
+      setTimeout(() => {
+        this.newRockDown(objs);
+        this.generateRandomRocks(objs);
+      }, Random.randomInt(1000, 2000));
+    }, Random.randomInt(1000, 2000));
   }
 }
 
@@ -27,10 +74,10 @@ class LayerReady extends Layer {
   events(e, canvas, objs) {
     if (e.type == "click") {
       let position = canvas.getCursorPosition(e);
-      let cupClicked = objs.cup.clicked(position.x, position.y)
+      let cupClicked = objs.cup.clicked(position.x, position.y);
       if (cupClicked) {
         this.changeStage("leaderBoard");
-      }else{
+      } else {
         this.changeStage("play");
       }
     }
@@ -50,10 +97,10 @@ class LayerMenu extends Layer {
 class LayerAskName extends Layer {
   start(canvas, objs) {
     objs.writer.removeParagraphs();
-    
+
     objs.tap.centerX(canvas);
     objs.tap.y = 400;
-    objs.tap.visible = false; 
+    objs.tap.visible = false;
 
     this.askName = new Paragraph("Write your name", 0, 150);
     objs.writer.appendParagraph(this.askName);
@@ -88,17 +135,28 @@ class LayerLeaderboard extends Layer {
     objs.writer.removeParagraphs();
 
     let scores = JSON.parse(localStorage.getItem("scores") || "[]");
-    console.log(scores[0])
+    console.log(scores[0]);
 
-    this.firstPosition = new Paragraph(`${scores[0].score} ${scores[0].name}`, 0, 150);
-    this.secondPosition = new Paragraph(`${scores[1].score} ${scores[1].name}`, 0, 250);
-    this.thirdPosition = new Paragraph(`${scores[2].score} ${scores[2].name}`, 0, 350);
+    this.firstPosition = new Paragraph(
+      `${scores[0].score} ${scores[0].name}`,
+      0,
+      150
+    );
+    this.secondPosition = new Paragraph(
+      `${scores[1].score} ${scores[1].name}`,
+      0,
+      250
+    );
+    this.thirdPosition = new Paragraph(
+      `${scores[2].score} ${scores[2].name}`,
+      0,
+      350
+    );
 
     objs.writer.appendParagraph(this.firstPosition);
     objs.writer.appendParagraph(this.secondPosition);
     objs.writer.appendParagraph(this.thirdPosition);
   }
-
 
   loop(canvas, objs) {
     canvas.draw(objs.tap);

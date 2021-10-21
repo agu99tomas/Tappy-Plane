@@ -5,30 +5,38 @@ window.onload = () => {
   //// Game objects ////
   let objPlane = new ObjectPlane("plane");
   objPlane.addImages("planeYellow1.png","planeYellow2.png","planeYellow3.png");
+  game.addObject(objPlane);
 
   let objTapRight = new Object2D("tap");
   objTapRight.addImage("tapRight.png");
+  game.addObject(objTapRight);
 
   let objCup = new Object2D("cup");
   objCup.addImage("cup.png");
+  game.addObject(objCup);
 
   let objtextGetReady = new Object2D("textGetReady");
   objtextGetReady.addImage("textGetReady.png");
+  game.addObject(objtextGetReady);
 
   let collectionScore = new CollectionScore("score");
   for (let i = 0; i <= 9; i++) {
     collectionScore.addImage("number" + i + ".png");
   }
+  game.addObject(collectionScore);
 
   let writer = new Writer('writer');
   writer.loadImages();
-
-  game.addObject(objPlane);
-  game.addObject(objTapRight);
-  game.addObject(objCup);
-  game.addObject(objtextGetReady);
-  game.addObject(collectionScore);
   game.addObject(writer);
+
+  let rocks = new Object2D("rock");
+  rocks.addImage("rockGrass.png");
+  game.addObject(rocks)
+
+  let rocksDown = new Object2D("rockDown");
+  rocksDown.addImage("rockGrassDown.png");
+  game.addObject(rocksDown)
+
 
   //// Layers ////
   let layerBackground = new Background("background.png", 1);
@@ -48,8 +56,8 @@ window.onload = () => {
 
   let stagePlay = new Stage("play");
   stagePlay.addLayer(layerBackground);
-  stagePlay.addLayer(layerGroundGrass);
   stagePlay.addLayer(layerPlay);
+  stagePlay.addLayer(layerGroundGrass);
 
   let stageAskName = new Stage("askName");
   stageAskName.addLayer(layerBackground);

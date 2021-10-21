@@ -54,11 +54,11 @@ class Object2D {
   }
 
   draw(canvas) {
-      canvas.ctx.drawImage(this.currentImage, this.x, this.y);
-      this.playAnimation(canvas.frame);
+    canvas.ctx.drawImage(this.currentImage, this.x, this.y);
+    this.playAnimation(canvas.frame);
   }
 
-  updateSizes(){
+  updateSizes() {
     this.height = this.currentImage.height;
     this.width = this.currentImage.width;
   }
@@ -68,9 +68,9 @@ class Object2D {
     this.images.push(newImage);
     if (this.currentImage === undefined) {
       this.currentImage = newImage;
-      this.currentImage.addEventListener('load', e =>  {
+      this.currentImage.addEventListener("load", (e) => {
         this.updateSizes();
-      })
+      });
     }
   }
 

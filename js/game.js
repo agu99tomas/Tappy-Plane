@@ -4,7 +4,11 @@ window.onload = () => {
 
   //// Game objects ////
   let objPlane = new ObjectPlane("plane");
-  objPlane.addImages("planeYellow1.png","planeYellow2.png","planeYellow3.png");
+  objPlane.addImages(
+    "planeYellow1.png",
+    "planeYellow2.png",
+    "planeYellow3.png"
+  );
   game.addObject(objPlane);
 
   let objTapRight = new Object2D("tap");
@@ -25,18 +29,17 @@ window.onload = () => {
   }
   game.addObject(collectionScore);
 
-  let writer = new Writer('writer');
+  let writer = new Writer("writer");
   writer.loadImages();
   game.addObject(writer);
 
-  let rocks = new Object2D("rock");
+  let rocks = new ObjectRock("rock");
   rocks.addImage("rockGrass.png");
-  game.addObject(rocks)
+  game.addObject(rocks);
 
-  let rocksDown = new Object2D("rockDown");
+  let rocksDown = new ObjectRock("rockDown");
   rocksDown.addImage("rockGrassDown.png");
-  game.addObject(rocksDown)
-
+  game.addObject(rocksDown);
 
   //// Layers ////
   let layerBackground = new Background("background.png", 1);
@@ -76,14 +79,13 @@ window.onload = () => {
   game.start();
 
   /* 
-  
+   FAKE SCORES TEMP
   */
- 
+
   let fakeScores = [
-    {name: 'JOJO', score : '193'},
-    {name: 'VADER', score : '57'},
-    {name: 'FRANK', score : '9'}
-  ]
-  localStorage.setItem("scores",  JSON.stringify(fakeScores));
-  
+    { name: "JOJO", score: "193" },
+    { name: "VADER", score: "57" },
+    { name: "FRANK", score: "9" },
+  ];
+  localStorage.setItem("scores", JSON.stringify(fakeScores));
 };

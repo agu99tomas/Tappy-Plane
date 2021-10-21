@@ -7,17 +7,16 @@ class LayerPlay extends Layer {
 
     this.rocks = [];
     this.generateRandomRocks(objs);
-
     objs.plane.gameStart = true;
   }
 
   loop(canvas, objs) {
-    this.textCore.text = this.score;
     canvas.draw(objs.plane);
     this.rocks.forEach((rock) => {
       canvas.drawImage(rock.currentImage, rock.x, rock.y);
     });
     this.moveRocks();
+    this.countScore(objs);
     canvas.draw(objs.writer);
   }
 
@@ -53,6 +52,18 @@ class LayerPlay extends Layer {
         this.generateRandomRocks(objs);
       }, Random.randomInt(1000, 2000));
     }, Random.randomInt(1000, 2000));
+  }
+
+  countScore(objs) {
+    this.rocks.forEach((rock) => {
+      let endXRock = rock.x + rock.width;
+
+      if (endXRock <= objs.plane.x && !rock.scoreCounted) {
+        this.score++;
+        this.textCore.text = this.score;
+        rock.scoreCounted = true;
+      }
+    });
   }
 }
 
@@ -125,6 +136,11 @@ class LayerAskName extends Layer {
       if (objs.tap.visible) {
         objs.plane.playerName = this.playerName.text;
         this.changeStage("getReady");
+        // It should be an attribute of the Game class.
+        let bgSound = new Audio("sounds/music.mp3");
+        bgSound.loop = true;
+        bgSound.play();
+        //
       }
     }
   }

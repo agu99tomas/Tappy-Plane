@@ -71,6 +71,13 @@ class CollectionScore extends CollectionImage {
   }
 }
 
+class ObjectRock extends Object2D {
+  constructor(id, animationSpeed = 2) {
+    super(id, (animationSpeed = 2));
+    this.scoreCounted = false;
+  }
+}
+
 class Alphabet {
   static alpha = Array.from(Array(26)).map((e, i) => i + 65);
   static alphabet = Alphabet.alpha.map((x) => String.fromCharCode(x)); // ["A", "B", "C", "D", "E", "F", "G", "H"...
@@ -118,7 +125,7 @@ class Writer extends CollectionImage {
     this.numberImages = [];
   }
 
-  removeParagraphs(){
+  removeParagraphs() {
     this.paragraphs = [];
   }
 
@@ -175,7 +182,7 @@ class Writer extends CollectionImage {
         return sum + paragraph.spaceSize; // unrecognized character or space
       }
     }, 0);
-    let nextPositionX = canvas.width / 2 -  (totalWidth / 2) + paragraph.x
+    let nextPositionX = canvas.width / 2 - totalWidth / 2 + paragraph.x;
 
     paragraphAsImage.forEach((img) => {
       if (img === undefined) {

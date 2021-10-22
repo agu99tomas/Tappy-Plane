@@ -40,6 +40,15 @@ class Image2D extends Image {
   }
 }
 
+class Box {
+  constructor() {
+    this.width = 0;
+    this.height = 0;
+    this.x = 0;
+    this.y = 0;
+  }
+}
+
 class Object2D {
   constructor(id, animationSpeed = 2) {
     this.id = id;
@@ -47,6 +56,7 @@ class Object2D {
     this.y = 0;
     this.width = 0;
     this.height = 0;
+    this.box = new Box();
     this.images = [];
     this.currentImage = undefined;
     this.animationSpeed = animationSpeed;
@@ -61,6 +71,8 @@ class Object2D {
   updateSizes() {
     this.height = this.currentImage.height;
     this.width = this.currentImage.width;
+    this.box.width = this.width;
+    this.box.height = this.height;
   }
 
   addImage(fileName) {
@@ -93,7 +105,7 @@ class Object2D {
     this.updateSizes();
   }
 
-  events(e) {}
+  events(e) { }
 
   centerY(canvas) {
     this.y = canvas.height / 2 - this.height / 2;
@@ -117,7 +129,25 @@ class Object2D {
     return false;
   }
 
-  hasCollision() {}
+  centerBoxAxis(){
+    this.box.y = this.y + this.height/2;
+    this.box.x = this.x + this.width/2;
+  }
+
+  drawHelperCollision(canvas){
+      canvas.ctx.beginPath();
+      canvas.ctx.rect(this.box.x, this.box.y, this.box.width, this.box.height);
+      canvas.ctx.stroke();
+  }
+
+  hasCollision(object2D, canvas = undefined, helper = false) {
+    this.centerBoxAxis();
+    object2D.centerBoxAxis();
+    if(helper){
+      this.drawHelperCollision(canvas);
+      object2D.drawHelperCollision(canvas);
+    }  
+  }
 }
 
 class CollectionImage {
@@ -126,7 +156,7 @@ class CollectionImage {
     this.images = [];
   }
 
-  draw(canvas) {}
+  draw(canvas) { }
 
   addImage(fileName) {
     let newImage = new Image2D(fileName);
@@ -139,7 +169,7 @@ class CollectionImage {
     });
   }
 
-  events(e) {}
+  events(e) { }
 }
 
 class Canvas {
@@ -182,11 +212,11 @@ class Canvas {
 }
 
 class Layer {
-  start(canvas, objs) {}
+  start(canvas, objs) { }
 
-  loop(canvas, objs) {}
+  loop(canvas, objs) { }
 
-  events(e, canvas, objects) {}
+  events(e, canvas, objects) { }
 
   changeStage(id) {
     CustomEvents.changeStage.data = { id };

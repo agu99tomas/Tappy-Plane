@@ -13,7 +13,12 @@ class LayerPlay extends Layer {
   loop(canvas, objs) {
     canvas.draw(objs.plane);
     this.rocks.forEach((rock) => {
-      canvas.drawImage(rock.currentImage, rock.x, rock.y);
+      canvas.draw(rock);
+      objs.plane.box.width = 75;
+      objs.plane.box.height = 60;
+      rock.box.width = 5;
+      //rock.box.height = 10;
+      objs.plane.hasCollision(rock, canvas, true);
     });
     this.moveRocks();
     this.countScore(objs);
@@ -28,12 +33,14 @@ class LayerPlay extends Layer {
   }
 
   newRock(objs) {
-    let cloneRock = Object.assign({}, objs.rock);
+    let cloneRock = new objs.rock.constructor;
+    cloneRock.currentImage = objs.rock.currentImage;
+    console.log( cloneRock.currentImage)
     cloneRock.x = canvas.width + cloneRock.width;
     cloneRock.y =
       canvas.height -
       cloneRock.height +
-      Random.randomInt(0, cloneRock.height * 0.3);
+      Random.randomInt(0, cloneRock.height * 0.2);
     this.rocks.push(cloneRock);
   }
 

@@ -44,8 +44,6 @@ class Box {
   constructor() {
     this.width = 0;
     this.height = 0;
-    this.x = 0;
-    this.y = 0;
   }
 }
 
@@ -105,7 +103,7 @@ class Object2D {
     this.updateSizes();
   }
 
-  events(e) { }
+  events(e) {}
 
   centerY(canvas) {
     this.y = canvas.height / 2 - this.height / 2;
@@ -116,37 +114,49 @@ class Object2D {
   }
 
   clicked(x2, y2) {
-    let height = this.height;
-    let width = this.width;
+    let increase = 70;
+    let height = this.height + increase;
+    let width = this.width + increase;
+    let x = this.x - increase/2;
+    let y = this.y - increase/2;
+
     if (
-      y2 > this.y &&
-      y2 < this.y + height &&
-      x2 > this.x &&
-      x2 < this.x + width
+      y2 > y &&
+      y2 < y + height &&
+      x2 > x &&
+      x2 < x + width
     ) {
       return true;
     }
     return false;
   }
 
-  centerBoxAxis(){
-    this.box.y = this.y + this.height/2;
-    this.box.x = this.x + this.width/2;
+  centerBoxAxis(object2D) {
+    // no se deberia necesitar pasar object2d como parametro
+    this.box.y = this.y + (this.height / 2) - (this.box.height / 2) ;
+    this.box.x = this.x + (this.width / 2) - (this.box.width / 2);
+
+    object2D.box.y = object2D.y + (object2D.height / 2) - (object2D.box.height /2);
+    object2D.box.x = object2D.x + (object2D.width / 2) - (object2D.box.width /2);
   }
 
-  drawHelperCollision(canvas){
-      canvas.ctx.beginPath();
-      canvas.ctx.rect(this.box.x, this.box.y, this.box.width, this.box.height);
-      canvas.ctx.stroke();
+  drawHelperCollision(canvas, object2D) {
+    // no se deberia necesitar pasar object2d como parametro
+    canvas.drawRect(this.box.x, this.box.y, this.box.width, this.box.height);
+    canvas.drawRect(object2D.box.x, object2D.box.y, object2D.box.width, object2D.box.height);
   }
 
   hasCollision(object2D, canvas = undefined, helper = false) {
-    this.centerBoxAxis();
-    object2D.centerBoxAxis();
-    if(helper){
-      this.drawHelperCollision(canvas);
-      object2D.drawHelperCollision(canvas);
-    }  
+    this.centerBoxAxis(object2D);
+    if (helper) {
+      this.drawHelperCollision(canvas, object2D);
+    }
+    
+    return (this.box.x < object2D.box.x + object2D.box.width &&
+      this.box.x + this.box.width > object2D.box.x &&
+      this.box.y < object2D.box.y + object2D.box.height &&
+      this.box.y + this.box.height > object2D.box.y);
+      
   }
 }
 
@@ -156,7 +166,7 @@ class CollectionImage {
     this.images = [];
   }
 
-  draw(canvas) { }
+  draw(canvas) {}
 
   addImage(fileName) {
     let newImage = new Image2D(fileName);
@@ -169,7 +179,7 @@ class CollectionImage {
     });
   }
 
-  events(e) { }
+  events(e) {}
 }
 
 class Canvas {
@@ -195,6 +205,12 @@ class Canvas {
     this.ctx.drawImage(image, x, y);
   }
 
+  drawRect(x, y, width, height) {
+    this.ctx.beginPath();
+    this.ctx.rect(x, y, width, height);
+    this.ctx.stroke();
+  }
+
   getCursorPosition(event) {
     const rect = this.realCanvas.getBoundingClientRect();
     const x = event.clientX - rect.left;
@@ -212,11 +228,11 @@ class Canvas {
 }
 
 class Layer {
-  start(canvas, objs) { }
+  start(canvas, objs) {}
 
-  loop(canvas, objs) { }
+  loop(canvas, objs) {}
 
-  events(e, canvas, objects) { }
+  events(e, canvas, objects) {}
 
   changeStage(id) {
     CustomEvents.changeStage.data = { id };

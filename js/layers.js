@@ -13,12 +13,15 @@ class LayerPlay extends Layer {
   loop(canvas, objs) {
     canvas.draw(objs.plane);
     this.rocks.forEach((rock) => {
-      canvas.drawImage(rock.currentImage, rock.x, rock.y);
+      canvas.drawImage(rock.currentImage, rock.x, rock.y); // al clonar el objeto se pierden los metodos...
+      // La redimension del box deberia hacerse en el contructor
       objs.plane.box.width = 75;
       objs.plane.box.height = 60;
       rock.box.width = 5;
-      //rock.box.height = 10;
-      //objs.plane.hasCollision(rock, canvas, true);
+
+      if (objs.plane.hasCollision(rock, canvas, true)) {
+        this.changeStage("gameover");
+      }
     });
     this.moveRocks();
     this.countScore(objs);
@@ -33,6 +36,7 @@ class LayerPlay extends Layer {
   }
 
   newRock(objs) {
+    // no se deberian clonar los objectos (se pierden los metodos), los objetos deberian instanciarse dentro de los layers
     let cloneRock = Object.assign({}, objs.rock);
     cloneRock.x = canvas.width + cloneRock.width;
     cloneRock.y =
@@ -90,10 +94,8 @@ class LayerReady extends Layer {
   events(e, canvas, objs) {
     if (e.type == "click") {
       let position = canvas.getCursorPosition(e);
-      let cupClicked = objs.cup.clicked(position.x, position.y);
-      if (cupClicked) {
-        this.changeStage("leaderBoard");
-      } else {
+      let tapClicked = objs.tap.clicked(position.x, position.y);
+      if (tapClicked) {
         this.changeStage("play");
       }
     }
@@ -107,6 +109,15 @@ class LayerMenu extends Layer {
   }
   loop(canvas, objs) {
     canvas.draw(objs.cup);
+  }
+  events(e, canvas, objs) {
+    if (e.type == "click") {
+      let position = canvas.getCursorPosition(e);
+      let cupClicked = objs.cup.clicked(position.x, position.y);
+      if (cupClicked) {
+        this.changeStage("leaderBoard");
+      }
+    }
   }
 }
 
@@ -140,19 +151,32 @@ class LayerAskName extends Layer {
     if (e.type == "click") {
       if (objs.tap.visible) {
         objs.plane.playerName = this.playerName.text;
-        this.changeStage("getReady");
-        // It should be an attribute of the Game class.
-        let bgSound = new Audio("sounds/music.mp3");
-        bgSound.loop = true;
-        bgSound.play();
-        //
+
+        let position = canvas.getCursorPosition(e);
+        let tapClicked = objs.tap.clicked(position.x, position.y);
+        if (tapClicked) {
+          this.changeStage("getReady");
+
+          // It should be an attribute of the Game class.
+          let bgSound = new Audio("sounds/music.mp3");
+          bgSound.loop = true;
+          bgSound.play();
+          //
+        }
       }
     }
   }
 }
 
 class LayerLeaderboard extends Layer {
+
+  constructor(){
+    super();
+    this.nextStage = "getReady";
+  }
+
   start(canvas, objs) {
+    
     objs.writer.removeParagraphs();
 
     let scores = JSON.parse(localStorage.getItem("scores") || "[]");
@@ -184,9 +208,44 @@ class LayerLeaderboard extends Layer {
     canvas.draw(objs.writer);
   }
 
+  message(message){
+    if (message !== undefined) {
+      this.nextStage = message;
+    }
+  }
+
   events(e, canvas, objs) {
     if (e.type == "click") {
-      this.changeStage("getReady");
+      let position = canvas.getCursorPosition(e);
+      let tapClicked = objs.tap.clicked(position.x, position.y);
+      if (tapClicked) {
+        this.changeStage(this.nextStage);
+        this.nextStage = "gameover";
+      }
+    }
+  }
+}
+
+class LayerGameOver extends Layer {
+  start(canvas, objs) {
+    objs.textGameOver.centerX(canvas);
+    objs.textGameOver.y = 100;
+  }
+
+  loop(canvas, objs) {
+    canvas.draw(objs.textGameOver);
+    canvas.draw(objs.tap);
+  }
+
+  events(e, canvas, objs) {}
+
+  events(e, canvas, objs) {
+    if (e.type == "click") {
+      let position = canvas.getCursorPosition(e);
+      let tapClicked = objs.tap.clicked(position.x, position.y);
+      if (tapClicked) {
+        this.changeStage("play");
+      }
     }
   }
 }

@@ -41,6 +41,10 @@ window.onload = () => {
   rocksDown.addImage("rockGrassDown.png");
   game.addObject(rocksDown);
 
+  let textGameOver = new Object2D('textGameOver')
+  textGameOver.addImage("textGameOver.png");
+  game.addObject(textGameOver);
+
   //// Layers ////
   let layerBackground = new Background("background.png", 1);
   let layerGroundGrass = new Background("groundGrass.png", 4);
@@ -49,6 +53,7 @@ window.onload = () => {
   let layerMenu = new LayerMenu();
   let layerAskName = new LayerAskName();
   let layerLeaderboard = new LayerLeaderboard();
+  let layerGameOver = new LayerGameOver();
 
   //// Stages ////
   let stageReady = new Stage("getReady");
@@ -72,10 +77,17 @@ window.onload = () => {
   stageLeaderboard.addLayer(layerGroundGrass);
   stageLeaderboard.addLayer(layerLeaderboard);
 
+  let stageGameOver = new Stage("gameover");
+  stageGameOver.addLayer(layerBackground);
+  stageGameOver.addLayer(layerGroundGrass);
+  stageGameOver.addLayer(layerMenu);
+  stageGameOver.addLayer(layerGameOver);
+
   game.addStage(stageAskName);
   game.addStage(stageLeaderboard);
   game.addStage(stageReady);
   game.addStage(stagePlay);
+  game.addStage(stageGameOver);
   game.start();
 
   /* 

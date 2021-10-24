@@ -1,7 +1,7 @@
 
 <h1 align="center">
     <br>
-    <img src="resources\planeYellow1.png" alt="Tappy Plane Logo">
+    <img src="images\planeYellow1.png" alt="Tappy Plane Logo">
   <br>
   Tappy Plane
   <br>

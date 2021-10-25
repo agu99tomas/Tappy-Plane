@@ -1,4 +1,4 @@
-window.onload = () => {
+function start(imagesBasedOnTemp) {
   ScoreManager.saveFakeScores();
   let canvas = new Canvas("canvas", 800, 480);
   let game = new Game(canvas);
@@ -35,20 +35,20 @@ window.onload = () => {
   game.addObject(writer);
 
   let rocks = new ObjectRock("rock");
-  rocks.addImage("rockGrass.png");
+  rocks.addImage(imagesBasedOnTemp.rock);
   game.addObject(rocks);
 
   let rocksDown = new ObjectRock("rockDown");
-  rocksDown.addImage("rockGrassDown.png");
+  rocksDown.addImage(imagesBasedOnTemp.rockDown);
   game.addObject(rocksDown);
 
-  let textGameOver = new Object2D('textGameOver')
+  let textGameOver = new Object2D("textGameOver");
   textGameOver.addImage("textGameOver.png");
   game.addObject(textGameOver);
 
   //// Layers ////
   let layerBackground = new Background("background.png", 1);
-  let layerGroundGrass = new Background("groundGrass.png", 4);
+  let layerGroundGrass = new Background(imagesBasedOnTemp.ground, 4);
   let layerReady = new LayerReady();
   let layerPlay = new LayerPlay();
   let layerMenu = new LayerMenu();
@@ -90,4 +90,8 @@ window.onload = () => {
   game.addStage(stagePlay);
   game.addStage(stageGameOver);
   game.start();
+}
+
+window.onload = () => {
+  asyncImagesBasedOnTemp(start);
 };

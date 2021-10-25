@@ -41,7 +41,7 @@ class ObjectPlane extends Object2D {
     }
 
     // Evita que el jugador pase por encima de las rocas
-    if ( (object2D.y <= 0) && (this.y <= 0) && (this.x >= object2D.x)   ) {
+    if (object2D.y <= 0 && this.y <= 0 && this.x >= object2D.x) {
       return true;
     }
 
@@ -222,13 +222,12 @@ class ScoreManager {
 
   static saveOrTrashScore(name, score) {
     let scores = ScoreManager.getScores();
-    let scoreToReplace = scores.find((s) => s.name == name || s.score < score);
-    let indexOfSocre = scores.indexOf(scoreToReplace);
+    scores = scores.map((s) =>
+      s.name == name || s.score < score ? { name, score } : s
+    );
+    console.log(scores)
 
-    if (scoreToReplace !== undefined) {
-      scores[indexOfSocre] = { name, score };
-      ScoreManager.saveScores(scores);
-    }
+    ScoreManager.saveScores(scores);
   }
 
   static saveFakeScores() {
@@ -238,7 +237,7 @@ class ScoreManager {
     let fakeScores = [
       { name: "JOJO", score: "69" },
       { name: "VADER", score: "49" },
-      { name: "FRANK", score: "5" },
+      { name: "FRANK", score: "21" },
     ];
     localStorage.setItem("scores", JSON.stringify(fakeScores));
   }

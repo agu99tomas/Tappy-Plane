@@ -40,6 +40,11 @@ class ObjectPlane extends Object2D {
       return superCollision;
     }
 
+    // Evita que el jugador pase por encima de las rocas
+    if ( (object2D.y <= 0) && (this.y <= 0) && (this.x >= object2D.x)   ) {
+      return true;
+    }
+
     // detección de colisión con el suelo !!! el suelo deberia tratarse como un obj o poder detectar una colision con el...
     // fix temporal
     if (this.y + this.height > canvas.height - 50) {

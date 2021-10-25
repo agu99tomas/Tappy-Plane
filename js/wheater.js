@@ -33,7 +33,7 @@ function getTemp() {
         units: "metric",
         APPID: "e235cd05d6004c0780d19a279349857d",
       }).done(function (weather) {
-        resolve(getImages(10));
+        resolve(getImages(weather.main.temp));
       });
     });
   });

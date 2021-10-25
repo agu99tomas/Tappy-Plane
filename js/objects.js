@@ -225,8 +225,6 @@ class ScoreManager {
     scores = scores.map((s) =>
       s.name == name || s.score < score ? { name, score } : s
     );
-    console.log(scores)
-
     ScoreManager.saveScores(scores);
   }
 

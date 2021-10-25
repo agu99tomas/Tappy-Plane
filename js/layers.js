@@ -1,13 +1,19 @@
 class LayerPlay extends Layer {
   start(canvas, objs) {
+    objs.plane.gameover = false; // deberia ser una atributo de la clase game
+    objs.plane.gameStart = true; // same
+    objs.plane.drop = 0; // los objetos deberian instanciarse por layer para evitar este tipo de cosas...
+    objs.plane.centerY(canvas);
+
     this.score = 0;
     objs.writer.removeParagraphs();
     this.textCore = new Paragraph(this.score, 0, 90);
     objs.writer.appendParagraph(this.textCore);
 
     this.rocks = [];
+    this.timeouts1 = [];
+    this.timeouts2 = [];
     this.generateRandomRocks(objs);
-    objs.plane.gameStart = true;
   }
 
   loop(canvas, objs) {
@@ -20,6 +26,8 @@ class LayerPlay extends Layer {
       rock.box.width = 5;
 
       if (objs.plane.hasCollision(rock, canvas, true)) {
+        this.clearAllTimeOut();
+        objs.plane.gameover = true;
         this.changeStage("gameover");
       }
     });
@@ -54,15 +62,27 @@ class LayerPlay extends Layer {
   }
 
   generateRandomRocks(objs) {
-    setTimeout(() => {
-      this.newRock(objs);
+    this.timeouts1.push(
       setTimeout(() => {
-        this.newRockDown(objs);
-        this.generateRandomRocks(objs);
-      }, Random.randomInt(1000, 2000));
-    }, Random.randomInt(1000, 2000));
+        this.newRock(objs);
+        this.timeouts2.push(
+          setTimeout(() => {
+            this.newRockDown(objs);
+            this.generateRandomRocks(objs);
+          }, Random.randomInt(1000, 1500))         
+        );
+      }, Random.randomInt(1000, 1800))
+    );
   }
 
+  clearAllTimeOut() {
+    for (var i = 0; i < this.timeouts1.length; i++) {
+      clearTimeout(this.timeouts1[i]);
+    }
+    for (var i = 0; i < this.timeouts2.length; i++) {
+      clearTimeout(this.timeouts2[i]);
+    }
+  }
   countScore(objs) {
     this.rocks.forEach((rock) => {
       let endXRock = rock.x + rock.width;
@@ -169,14 +189,11 @@ class LayerAskName extends Layer {
 }
 
 class LayerLeaderboard extends Layer {
-
-  constructor(){
+  constructor() {
     super();
-    this.nextStage = "getReady";
   }
 
   start(canvas, objs) {
-    
     objs.writer.removeParagraphs();
 
     let scores = JSON.parse(localStorage.getItem("scores") || "[]");
@@ -208,7 +225,7 @@ class LayerLeaderboard extends Layer {
     canvas.draw(objs.writer);
   }
 
-  message(message){
+  message(message) {
     if (message !== undefined) {
       this.nextStage = message;
     }
@@ -218,9 +235,10 @@ class LayerLeaderboard extends Layer {
     if (e.type == "click") {
       let position = canvas.getCursorPosition(e);
       let tapClicked = objs.tap.clicked(position.x, position.y);
-      if (tapClicked) {
-        this.changeStage(this.nextStage);
-        this.nextStage = "gameover";
+      if (objs.plane.gameover) {
+        this.changeStage("gameover");
+      } else {
+        this.changeStage("getReady");
       }
     }
   }
@@ -230,11 +248,13 @@ class LayerGameOver extends Layer {
   start(canvas, objs) {
     objs.textGameOver.centerX(canvas);
     objs.textGameOver.y = 100;
+    objs.plane.centerY(canvas);
   }
 
   loop(canvas, objs) {
     canvas.draw(objs.textGameOver);
     canvas.draw(objs.tap);
+    canvas.draw(objs.plane);
   }
 
   events(e, canvas, objs) {}

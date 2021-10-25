@@ -1,7 +1,7 @@
 class ObjectPlane extends Object2D {
   constructor(id, animationSpeed = 2) {
     super(id, (animationSpeed = 2));
-    this.drop = -6;
+    this.drop = 0;
     this.jumpForce = 5;
     this.gravity = 0.1;
     this.gameover = false;
@@ -11,7 +11,7 @@ class ObjectPlane extends Object2D {
   }
 
   jump() {
-    if (this.drop <= 2) {
+    if (this.drop <= 2 && !this.gameover) {
       this.drop += this.jumpForce;
     }
   }
@@ -28,19 +28,12 @@ class ObjectPlane extends Object2D {
   }
 
   draw(canvas) {
-    if (this.gameover) {
-      this.lostAndGoLeft();
-    }
-    if (this.gameStart) {
+    if (this.gameStart && !this.gameover) {
       this.fallOrJump();
     }
     super.draw(canvas);
   }
 
-  lostAndGoLeft() {
-    this.x -= 4;
-    this.disappeared = this.width + this.x < 0;
-  }
 }
 
 class CollectionScore extends CollectionImage {

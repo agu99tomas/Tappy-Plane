@@ -26,6 +26,7 @@ class LayerPlay extends Layer {
       rock.box.width = 5;
 
       if (objs.plane.hasCollision(rock, canvas)) {
+        ScoreManager.saveOrTrashScore(objs.plane.playerName, this.score);
         this.clearAllTimeOut();
         objs.plane.gameover = true;
         this.changeStage("gameover");
@@ -197,7 +198,6 @@ class LayerLeaderboard extends Layer {
     objs.writer.removeParagraphs();
 
     let scores = JSON.parse(localStorage.getItem("scores") || "[]");
-    console.log(scores[0]);
 
     this.firstPosition = new Paragraph(
       `${scores[0].score} ${scores[0].name}`,

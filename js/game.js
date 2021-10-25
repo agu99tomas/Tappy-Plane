@@ -1,4 +1,5 @@
 window.onload = () => {
+  ScoreManager.saveFakeScores();
   let canvas = new Canvas("canvas", 800, 480);
   let game = new Game(canvas);
 
@@ -89,15 +90,4 @@ window.onload = () => {
   game.addStage(stagePlay);
   game.addStage(stageGameOver);
   game.start();
-
-  /* 
-   FAKE SCORES TEMP
-  */
-
-  let fakeScores = [
-    { name: "JOJO", score: "193" },
-    { name: "VADER", score: "57" },
-    { name: "FRANK", score: "9" },
-  ];
-  localStorage.setItem("scores", JSON.stringify(fakeScores));
 };

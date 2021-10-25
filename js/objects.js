@@ -42,12 +42,10 @@ class ObjectPlane extends Object2D {
 
     // detección de colisión con el suelo !!! el suelo deberia tratarse como un obj o poder detectar una colision con el...
     // fix temporal
-    if ( (this.y + this.height) > canvas.height - 50  ) {
-      return true;  
+    if (this.y + this.height > canvas.height - 50) {
+      return true;
     }
-
   }
-
 }
 
 class CollectionScore extends CollectionImage {
@@ -205,5 +203,38 @@ class Writer extends CollectionImage {
     this.paragraphs.forEach((paragraph) => {
       this.writeParagraph(paragraph, canvas);
     });
+  }
+}
+
+class ScoreManager {
+  static getScores() {
+    return JSON.parse(localStorage.getItem("scores") || "[]");
+  }
+
+  static saveScores(scores) {
+    localStorage.setItem("scores", JSON.stringify(scores));
+  }
+
+  static saveOrTrashScore(name, score) {
+    let scores = ScoreManager.getScores();
+    let scoreToReplace = scores.find((s) => s.name == name || s.score < score);
+    let indexOfSocre = scores.indexOf(scoreToReplace);
+
+    if (scoreToReplace !== undefined) {
+      scores[indexOfSocre] = { name, score };
+      ScoreManager.saveScores(scores);
+    }
+  }
+
+  static saveFakeScores() {
+    if (ScoreManager.getScores().length != 0) {
+      return;
+    }
+    let fakeScores = [
+      { name: "JOJO", score: "69" },
+      { name: "VADER", score: "49" },
+      { name: "FRANK", score: "5" },
+    ];
+    localStorage.setItem("scores", JSON.stringify(fakeScores));
   }
 }

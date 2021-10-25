@@ -34,6 +34,20 @@ class ObjectPlane extends Object2D {
     super.draw(canvas);
   }
 
+  hasCollision(object2D, canvas, helper) {
+    let superCollision = super.hasCollision(object2D, canvas, helper);
+    if (superCollision) {
+      return superCollision;
+    }
+
+    // detección de colisión con el suelo !!! el suelo deberia tratarse como un obj o poder detectar una colision con el...
+    // fix temporal
+    if ( (this.y + this.height) > canvas.height - 50  ) {
+      return true;  
+    }
+
+  }
+
 }
 
 class CollectionScore extends CollectionImage {

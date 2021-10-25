@@ -25,7 +25,7 @@ class LayerPlay extends Layer {
       objs.plane.box.height = 60;
       rock.box.width = 5;
 
-      if (objs.plane.hasCollision(rock, canvas, true)) {
+      if (objs.plane.hasCollision(rock, canvas)) {
         this.clearAllTimeOut();
         objs.plane.gameover = true;
         this.changeStage("gameover");
@@ -71,7 +71,7 @@ class LayerPlay extends Layer {
             this.generateRandomRocks(objs);
           }, Random.randomInt(1000, 1500))         
         );
-      }, Random.randomInt(1000, 1800))
+      }, Random.randomInt(1000, 1500))
     );
   }
 

@@ -2,7 +2,6 @@ class LayerPlay extends Layer {
   start(canvas, objs) {
     objs.plane.gameover = false; // deberia ser una atributo de la clase game
     objs.plane.gameStart = true; // same
-    objs.plane.drop = 0; // los objetos deberian instanciarse por layer para evitar este tipo de cosas...
     objs.plane.centerY(canvas);
 
     this.score = 0;

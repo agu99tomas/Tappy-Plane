@@ -1,9 +1,9 @@
 class ObjectPlane extends Object2D {
   constructor(id, animationSpeed = 2) {
     super(id, (animationSpeed = 2));
-    this.drop = 0;
+    this.drop = -3;
     this.jumpForce = 5;
-    this.gravity = 0.1;
+    this.gravity = 0.11;
     this.gameover = false;
     this.disappeared = false;
     this.gameStart = false;

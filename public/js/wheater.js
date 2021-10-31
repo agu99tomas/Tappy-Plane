@@ -24,11 +24,19 @@ function getImages(temp) {
 
 function getTemp() {
   return new Promise((resolve) => {
-    var getTemp = window.location.href + "api/temp";
-    $.getJSON(getTemp).done(function (data) {
-      console.log(data)
-      resolve(getImages(data.main.temp));
+    navigator.geolocation.getCurrentPosition(position =>{
+      let lat = position.coords.latitude;
+      let lon = position.coords.longitude;
+      console.log(lat, lon);
+      var getTemp = window.location.href + `api/temp?lat=${lat}&lon=${lon}`;
+
+      $.getJSON(getTemp).done(function (data) {
+        console.log(data)
+        resolve(getImages(data.main.temp));
+      });
+
     });
+
   });
 }
 

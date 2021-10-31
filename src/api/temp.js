@@ -3,28 +3,21 @@ const router = express.Router();
 const axios = require("axios");
 
 router.get("/temp", async (req, res) => {
-  let getIP = "http://ip-api.com/json/";
   let openWeatherMap = "http://api.openweathermap.org/data/2.5/weather";
+  let lat = req.query.lat;
+  let lon = req.query.lon;
+
+  let params = {
+    lat: lat,
+    lon: lon,
+    units: "metric",
+    APPID: "e235cd05d6004c0780d19a279349857d",
+  };
 
   axios
-    .get(getIP)
+    .get(openWeatherMap, { params })
     .then((response) => {
-      let location = response.data;
-      let params = {
-        lat: location.lat,
-        lon: location.lon,
-        units: "metric",
-        APPID: "e235cd05d6004c0780d19a279349857d",
-      };
-
-      axios
-        .get(openWeatherMap, { params })
-        .then((response) => {
-          res.status(200).json(response.data);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      res.status(200).json(response.data);
     })
     .catch((error) => {
       console.log(error);
@@ -32,25 +25,3 @@ router.get("/temp", async (req, res) => {
 });
 
 module.exports = router;
-/*
-function getTemp() {
-    return new Promise((resolve) => {
-      var getIP = "http://ip-api.com/json/";
-      var openWeatherMap = "http://api.openweathermap.org/data/2.5/weather";
-      $.getJSON(getIP).done(function (location) {
-        $.getJSON(openWeatherMap, {
-          lat: location.lat,
-          lon: location.lon,
-          units: "metric",
-          APPID: "e235cd05d6004c0780d19a279349857d",
-        }).done(function (weather) {
-          resolve(getImages(weather.main.temp));
-        });
-      });
-    });
-  }
-
-
-
-
-*/

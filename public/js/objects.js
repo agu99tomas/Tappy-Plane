@@ -213,7 +213,7 @@ class Writer extends CollectionImage {
 
 class ScoreManager {
 
-  static apiUrl = ScoreManager.apiUrl + "api/"
+  static apiUrl = window.location.href + "api/"
 
   static getScores() {
     return new Promise( resolve => {

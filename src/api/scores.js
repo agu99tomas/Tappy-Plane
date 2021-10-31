@@ -15,7 +15,10 @@ router.get('/scores', async (req, res) => {
 });
 
 router.post('/scores', async (req, res) => {
-    req.body.ip = req.socket.remoteAddress;
+    req.body.ip =     req.body.ip = req.headers['x-forwarded-for'] ||
+    req.connection.remoteAddress ||
+    req.socket.remoteAddress ||
+    req.connection.socket.remoteAddress;
     const score = new Score(req.body);
 
     score.save((err, score) => {

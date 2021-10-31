@@ -4,8 +4,8 @@ const axios = require("axios");
 
 router.get("/temp", async (req, res) => {
   let openWeatherMap = "http://api.openweathermap.org/data/2.5/weather";
-  let lat = req.query.lat;
-  let lon = req.query.lon;
+  let lat = req.query.lat || -31.7696804;
+  let lon = req.query.lon || -60.8346743;
 
   let params = {
     lat: lat,

@@ -16,6 +16,7 @@ router.get('/admin', async (req, res) =>{
 
 
 router.post('/scores/add', async (req, res) =>{
+    req.body.ip = req.socket.remoteAddress;
     const score = new Score(req.body);
     await score.save();
     res.redirect('/admin');

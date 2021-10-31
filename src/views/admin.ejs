@@ -24,6 +24,7 @@
             <table class="table table-bordered table-hover">
                 <thead>
                     <tr>
+                        <th>Ip</th>
                         <th>Player Name</th>
                         <th>Score</th>
                         <th></th>
@@ -33,6 +34,7 @@
 
                     <% for(let i = 0; i < scores.length; i++) {%>
                         <tr>
+                            <td> <%= scores[i].ip %>  </td>
                             <td> <%= scores[i].playerName %>  </td>
                             <td> <%= scores[i].score %>  </td>
                             <td>

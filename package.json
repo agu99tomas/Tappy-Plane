@@ -1,7 +1,6 @@
 {
   "scripts": {
     "start": "node src/app.js",
-    "web": "node src/app.js",
     "dev": "nodemon src/app.js"
   },
   "dependencies": {

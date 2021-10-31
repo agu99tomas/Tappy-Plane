@@ -2,11 +2,13 @@ const express = require('express');
 const path = require('path');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
-
 const app = express();
 
+// local variables
+require('dotenv').config({path: 'variables.env'})
+
 // connecting to db
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/tappy-plane')
+mongoose.connect(process.env.DB_URL || 'mongodb://localhost/tappy-plane')
     .then(db => console.log("DB Connected"))
     .catch(err => console.log(err));
 
@@ -16,7 +18,6 @@ const apiScores = require('./api/scores');
 const apiTemp = require('./api/temp');
 
 // settings
-app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
@@ -32,6 +33,9 @@ app.use('/api/', apiScores);
 app.use('/api/', apiTemp);
 
 // starting server
-app.listen(app.get('port'), () => {
-    console.log(`Server on port: ${app.get('port')}`)
+const host = process.env.HOST || '0.0.0.0';
+const port = process.env.PORT || 3000; 
+
+app.listen(port, host, () => {
+    console.log(`Server on port: ${port}`)
 });

@@ -11,7 +11,7 @@ router.get('/scores', async (req, res) => {
     Score.find((err, scores) => {
         err && res.status(500).send(err.message);
         res.status(200).json(scores);
-    }).sort( { "score": sort } ).limit(limit);
+    }).sort( { "score": sort } ).limit(limit > 0 ? limit : 0);
 });
 
 router.post('/scores', async (req, res) => {

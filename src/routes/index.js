@@ -8,7 +8,7 @@ router.get('/', async (req, res) =>{
 });
 
 router.get('/admin', async (req, res) =>{
-    const scores = await Score.find();
+    const scores = await Score.find().sort(-1);
     res.render('admin', {
         scores
     });

@@ -6,13 +6,7 @@ const mongoose = require('mongoose');
 const app = express();
 
 // connecting to db
-let dbURI = 'mongodb://localhost/tappy-plane';
-
-if (process.env.NODE_ENV === 'production') {
-    dbURI = process.env.MONGOLAB_URI;
-}
-
-mongoose.connect(dbURI)
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/tappy-plane')
     .then(db => console.log("DB Connected"))
     .catch(err => console.log(err));
 

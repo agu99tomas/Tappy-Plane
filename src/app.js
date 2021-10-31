@@ -6,7 +6,13 @@ const mongoose = require('mongoose');
 const app = express();
 
 // connecting to db
-mongoose.connect('mongodb://localhost/tappy-plane')
+const dbURI = 'mongodb://localhost/tappy-plane';
+
+if (process.env.NODE_ENV === 'production') {
+    dbURI = process.env.MONGOLAB_URI;
+}
+
+mongoose.connect(dbURI)
     .then(db => console.log("DB Connected"))
     .catch(err => console.log(err));
 

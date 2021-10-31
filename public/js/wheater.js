@@ -25,8 +25,9 @@ function getImages(temp) {
 function getTemp() {
   return new Promise((resolve) => {
     var getTemp = window.location.href + "api/temp";
-    $.getJSON(getTemp).done(function (temp) {
-      resolve(getImages(temp.temp));
+    $.getJSON(getTemp).done(function (data) {
+      console.log(data)
+      resolve(getImages(data.main.temp));
     });
   });
 }

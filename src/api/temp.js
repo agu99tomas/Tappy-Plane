@@ -20,7 +20,7 @@ router.get("/temp", async (req, res) => {
       axios
         .get(openWeatherMap, { params })
         .then((response) => {
-          res.status(200).json({temp: response.data.main.temp});
+          res.status(200).json(response.data);
         })
         .catch((error) => {
           console.log(error);

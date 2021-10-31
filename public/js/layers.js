@@ -71,9 +71,9 @@ class LayerPlay extends Layer {
           setTimeout(() => {
             this.newRockDown(objs);
             this.generateRandomRocks(objs);
-          }, Random.randomInt(1000, 1500))
+          }, Random.randomInt(1000, 1400))
         );
-      }, Random.randomInt(1000, 1500))
+      }, Random.randomInt(1000, 1400))
     );
   }
 

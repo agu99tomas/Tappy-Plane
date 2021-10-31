@@ -67,7 +67,7 @@ class CollectionScore extends CollectionImage {
     return currentScore;
   }
 
-  countScore() {}
+  countScore() { }
 
   draw(canvas) {
     let scoreImages = this.getScoreAsImage();
@@ -212,31 +212,19 @@ class Writer extends CollectionImage {
 }
 
 class ScoreManager {
+
+  static apiUrl = "http://localhost:3000/api/"
+
   static getScores() {
-    return JSON.parse(localStorage.getItem("scores") || "[]");
+    return new Promise( resolve => {
+      $.getJSON( ScoreManager.apiUrl + 'scores?max_results=3&sort=-1').done( scores => resolve(scores));
+    });
   }
 
-  static saveScores(scores) {
-    localStorage.setItem("scores", JSON.stringify(scores));
-  }
-
-  static saveOrTrashScore(name, score) {
-    let scores = ScoreManager.getScores();
-    scores = scores.map((s) =>
-      s.name == name || s.score < score ? { name, score } : s
-    );
-    ScoreManager.saveScores(scores);
-  }
-
-  static saveFakeScores() {
-    if (ScoreManager.getScores().length != 0) {
-      return;
-    }
-    let fakeScores = [
-      { name: "JOJO", score: "69" },
-      { name: "VADER", score: "49" },
-      { name: "FRANK", score: "21" },
-    ];
-    localStorage.setItem("scores", JSON.stringify(fakeScores));
+  static saveScore(playerName, score) {
+    $.post( ScoreManager.apiUrl + "scores", {
+      playerName,
+      score,
+    });
   }
 }

@@ -1,0 +1,23 @@
+<%- include('partials/_header'); -%>
+<div class="container mt-5">
+    <h1>Update Score</h1>
+    <hr>
+    <div class="col-md-5">
+        <div class="card mb-5">
+            <div class="card-body">
+                <form action="/scores/edit/<%= score._id %>" method="post">
+                    <div class="form-group">
+                        <input type="text" name="playerName" class="form-control" placeholder="Player Name" value="<%= score.playerName %>">
+                    </div>
+                    <div class="form-group mt-2">
+                        <input type="number" name="score" class="form-control" placeholder="Score" value="<%= score.score %>">
+                    </div>
+    
+                    <button type="submit" class="btn btn-success mt-2 float-end">Update</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('partials/_footer'); -%>

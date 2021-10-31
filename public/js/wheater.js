@@ -24,17 +24,9 @@ function getImages(temp) {
 
 function getTemp() {
   return new Promise((resolve) => {
-    var getIP = "http://ip-api.com/json/";
-    var openWeatherMap = "http://api.openweathermap.org/data/2.5/weather";
-    $.getJSON(getIP).done(function (location) {
-      $.getJSON(openWeatherMap, {
-        lat: location.lat,
-        lon: location.lon,
-        units: "metric",
-        APPID: "e235cd05d6004c0780d19a279349857d",
-      }).done(function (weather) {
-        resolve(getImages(weather.main.temp));
-      });
+    var getTemp = "http://localhost:3000/api/temp";
+    $.getJSON(getTemp).done(function (temp) {
+      resolve(getImages(temp.temp));
     });
   });
 }

@@ -25,7 +25,9 @@ class LayerPlay extends Layer {
       rock.box.width = 5;
 
       if (objs.plane.hasCollision(rock, canvas)) {
-        ScoreManager.saveOrTrashScore(objs.plane.playerName, this.score);
+        if (objs.plane.gameover == false) {
+          ScoreManager.saveScore(objs.plane.playerName, this.score);
+        }
         this.clearAllTimeOut();
         objs.plane.gameover = true;
         this.changeStage("gameover");
@@ -69,7 +71,7 @@ class LayerPlay extends Layer {
           setTimeout(() => {
             this.newRockDown(objs);
             this.generateRandomRocks(objs);
-          }, Random.randomInt(1000, 1500))         
+          }, Random.randomInt(1000, 1500))
         );
       }, Random.randomInt(1000, 1500))
     );
@@ -195,28 +197,29 @@ class LayerLeaderboard extends Layer {
 
   start(canvas, objs) {
     objs.writer.removeParagraphs();
+    objs.writer.appendParagraph(new Paragraph('Loading', 0, 150));
+    this.getScores(objs);
+  }
 
-    let scores = JSON.parse(localStorage.getItem("scores") || "[]");
+  getScores(objs) {
+    let scores = ScoreManager.getScores();
 
-    this.firstPosition = new Paragraph(
-      `${scores[0].score} ${scores[0].name}`,
-      0,
-      150
-    );
-    this.secondPosition = new Paragraph(
-      `${scores[1].score} ${scores[1].name}`,
-      0,
-      250
-    );
-    this.thirdPosition = new Paragraph(
-      `${scores[2].score} ${scores[2].name}`,
-      0,
-      350
-    );
+    scores.then(
+      function (scores) {
+        objs.writer.removeParagraphs();
+        if (scores.length == 0) {
+          objs.writer.appendParagraph(new Paragraph('Empty', 0, 150));
+        }
+        let y = 150;
 
-    objs.writer.appendParagraph(this.firstPosition);
-    objs.writer.appendParagraph(this.secondPosition);
-    objs.writer.appendParagraph(this.thirdPosition);
+        for (let i = 0; i < scores.length; i++) {
+          const score = scores[i];
+          let paragraphScore = new Paragraph(`${score.score} ${score.playerName}`, 0, y);
+          objs.writer.appendParagraph(paragraphScore);
+          y += 100;
+        }
+      },
+    );
   }
 
   loop(canvas, objs) {
@@ -256,7 +259,7 @@ class LayerGameOver extends Layer {
     canvas.draw(objs.plane);
   }
 
-  events(e, canvas, objs) {}
+  events(e, canvas, objs) { }
 
   events(e, canvas, objs) {
     if (e.type == "click") {

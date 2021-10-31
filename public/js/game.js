@@ -1,5 +1,4 @@
 function start(imagesBasedOnTemp) {
-  ScoreManager.saveFakeScores();
   let canvas = new Canvas("canvas", 800, 480);
   let game = new Game(canvas);
 

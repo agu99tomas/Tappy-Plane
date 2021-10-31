@@ -24,8 +24,8 @@ function getImages(temp) {
 
 function getTemp() {
   return new Promise((resolve) => {
-    let lat = 31.88232;
-    let lon = -170.03175;
+    let lat = -73.726593; 
+    let lon = -67.479119;
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -45,7 +45,7 @@ function getTemp() {
         });
       }
     );
-    
+
   });
 }
 

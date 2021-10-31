@@ -24,26 +24,34 @@ function getImages(temp) {
 
 function getTemp() {
   return new Promise((resolve) => {
-    navigator.geolocation.getCurrentPosition(position =>{
-      let lat = position.coords.latitude;
-      let lon = position.coords.longitude;
-      console.log(lat, lon);
+    let lat = 31.88232;
+    let lon = -170.03175;
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        let lat = position.coords.latitude;
+        let lon = position.coords.longitude;
+
+        var getTemp = window.location.href + `api/temp?lat=${lat}&lon=${lon}`;
+
+        $.getJSON(getTemp).done(function (data) {
+          resolve(getImages(data.temp));
+        });
+      });
+
+    } else {
+
       var getTemp = window.location.href + `api/temp?lat=${lat}&lon=${lon}`;
 
       $.getJSON(getTemp).done(function (data) {
-        console.log(data)
-        resolve(getImages(data.main.temp));
+        resolve(getImages(data.temp));
       });
-
-    });
-
+    }
   });
+
 }
 
 async function asyncImagesBasedOnTemp(callable) {
   const imagesBasedOnTemp = await getTemp();
   callable(imagesBasedOnTemp);
 }
-
-
-

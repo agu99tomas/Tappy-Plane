@@ -29,8 +29,8 @@ function getTemp() {
 
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
-        let lat = position.coords.latitude;
-        let lon = position.coords.longitude;
+        lat = position.coords.latitude;
+        lon = position.coords.longitude;
 
         var getTemp = window.location.href + `api/temp?lat=${lat}&lon=${lon}`;
 

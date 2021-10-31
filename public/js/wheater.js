@@ -27,28 +27,20 @@ function getTemp() {
     let lat = 31.88232;
     let lon = -170.03175;
 
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        lat = position.coords.latitude;
-        lon = position.coords.longitude;
+    navigator.geolocation.getCurrentPosition((position) => {
+      lat = position.coords.latitude;
+      lon = position.coords.longitude;
+    });
 
-        var getTemp = window.location.href + `api/temp?lat=${lat}&lon=${lon}`;
-
-        $.getJSON(getTemp).done(function (data) {
-          resolve(getImages(data.temp));
-        });
-      });
-
-    } else {
-
+    setTimeout(() => {
       var getTemp = window.location.href + `api/temp?lat=${lat}&lon=${lon}`;
 
       $.getJSON(getTemp).done(function (data) {
         resolve(getImages(data.temp));
       });
-    }
+    }, 1000);
+    
   });
-
 }
 
 async function asyncImagesBasedOnTemp(callable) {

@@ -8,11 +8,6 @@
   <br>
 </h1>
 
-<p align="center">
-  <img src="preview.png" alt="Tappy Plane Photo">
-</p>
-
-
 ## Credits
 
 - [Kenney](https://kenney.nl)

@@ -2,7 +2,7 @@
 <h1 align="center">
     <br>
     <img src="public\images\planeYellow1.png" alt="Tappy Plane Logo">
-  <br>
+
   Tappy Plane
 </h1>
 

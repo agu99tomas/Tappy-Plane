@@ -4,8 +4,6 @@
     <img src="public\images\planeYellow1.png" alt="Tappy Plane Logo">
   <br>
   Tappy Plane
-  <br>
-  <br>
 </h1>
 
 ## Credits

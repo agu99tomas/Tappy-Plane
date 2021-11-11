@@ -26,7 +26,10 @@ exports.create = (req, res) => {
 
 // Retrieve all Scores
 exports.findAll = (req, res) => {
-  Score.getAll((err, data) => {
+  const maxResults = req.query.max_results;
+  const sort = req.query.sort;
+
+  Score.getAll(sort, maxResults, (err, data) => {
     if (err)
       res.status(500).send({
         message: err.message || "Some error occurred while retrieving tutorials."

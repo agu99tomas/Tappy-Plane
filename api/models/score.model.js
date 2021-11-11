@@ -33,8 +33,20 @@ Score.findById = (id, result) => {
   });
 };
 
-Score.getAll = (result) => {
+Score.getAll = (sort, maxResults, result) => {
   let query = "SELECT * FROM score";
+
+  if(sort == -1){
+    query += ' ORDER BY score DESC';
+  }else if(sort == 1){
+    query += ' ORDER BY score ASC';
+  }
+
+  if (maxResults) {
+    query += ` LIMIT ${maxResults}`;
+  }
+
+
 
   sql.query(query, (err, res) => {
     if (err) {

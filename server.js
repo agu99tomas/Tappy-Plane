@@ -1,7 +1,14 @@
 const express = require("express");
 const cors = require("cors");
+const path = require('path');
 
 const app = express();
+
+app.set('views', path.join(__dirname, 'game/views'));
+
+app.use(express.static(path.join(__dirname, 'game/public')));
+app.set('view engine', 'ejs');
+
 
 var corsOptions = {
   origin: "http://localhost:8081"
@@ -17,10 +24,10 @@ app.use(express.urlencoded({ extended: true })); /* bodyParser.urlencoded() is d
 
 // simple route
 app.get("/", (req, res) => {
-  res.json({ message: "Welcome to bezkoder application." });
+  res.render('index');
 });
 
-require("./app/routes/tutorial.routes.js")(app);
+require("./api/routes/tutorial.routes.js")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 3000;

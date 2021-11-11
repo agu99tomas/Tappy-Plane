@@ -1,0 +1,107 @@
+<%- include('partials/_header'); -%>
+
+    <nav class="navbar sticky-top navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Tappy Plane - Admin</a>
+        </div>
+    </nav>
+    <div class="container mt-5">
+        <h1 class="my-5">Scores</h1>
+        <button type="button" class="btn btn-primary mb-5" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            Add new score
+        </button>
+
+        <table id="table_admin" class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Player</th>
+                    <th>Score</th>
+                </tr>
+            </thead>
+
+        </table>
+    </div>
+
+    <script>
+        $(function () {
+            let scores = ["playerName", "score"];
+            $.ajax("/api/scores/",
+                { method: "get" })
+                .then(function (response) {
+                    $("#table_admin").dataTable({
+                        data: response,
+                        columns: [
+                            { "data": "playerName" },
+                            { "data": "score" },
+                        ]
+                    });
+                });
+        })
+    </script>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="/api/scores" method="post" id="form_add">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="playerName" class="form-label">Player Name</label>
+                            <input type="text" class="form-control" id="playerName" name="playerName"
+                                placeholder="The best gamer name of all time">
+                        </div>
+                        <div class="mb-3">
+                            <label for="score" class="form-label">Score</label>
+                            <input type="number" class="form-control" id="score" name="score"
+                                placeholder="Cheat and set a high score">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        $("#form_add").submit(function (e) {
+            e.preventDefault();
+            var form = $(this);
+            var url = form.attr('action');
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: form.serialize(),
+                success: function (data) {
+                    //window.location.reload();
+                    $('#playerName').val('');
+                    $('#score').val('');
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'Your score has been saved',
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(e => {
+                        let myModalEl = document.getElementById('exampleModal')
+                        let modal = bootstrap.Modal.getInstance(myModalEl) // Returns a Bootstrap modal instance
+                        modal.hide();
+                        window.location.reload()
+                    })
+
+                }
+            });
+
+
+        });
+    </script>
+
+    <%- include('partials/_footer'); -%>

@@ -1,10 +1,5 @@
 
-<h1 align="center">
-    <br>
-    <img src="public\images\planeYellow1.png" alt="Tappy Plane Logo">
-
-  Tappy Plane
-</h1>
+# Tappy Plane
 
 ## Credits
 

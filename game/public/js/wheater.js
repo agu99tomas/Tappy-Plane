@@ -50,6 +50,6 @@ function getTemp() {
 }
 
 async function asyncImagesBasedOnTemp(callable) {
-  const imagesBasedOnTemp = await getTemp();
+  const imagesBasedOnTemp = getImages(13)//await getTemp();
   callable(imagesBasedOnTemp);
 }

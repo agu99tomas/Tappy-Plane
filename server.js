@@ -4,8 +4,8 @@ const path = require('path');
 
 const app = express();
 
+// Change the location of public files and views
 app.set('views', path.join(__dirname, 'game/views'));
-
 app.use(express.static(path.join(__dirname, 'game/public')));
 app.set('view engine', 'ejs');
 

@@ -46,8 +46,6 @@ Score.getAll = (sort, maxResults, result) => {
     query += ` LIMIT ${maxResults}`;
   }
 
-
-
   sql.query(query, (err, res) => {
     if (err) {
       result(null, err);

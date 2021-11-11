@@ -27,6 +27,11 @@ app.get("/", (req, res) => {
   res.render('index');
 });
 
+app.get("/admin", (req, res) => {
+  res.render('admin');
+});
+
+
 require("./api/routes/tutorial.routes.js")(app);
 
 // set port, listen for requests
